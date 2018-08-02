@@ -1,0 +1,15 @@
+<h2>My Expenses</h2>
+<div class="expenses-list">
+    <hr>
+  <div *ngFor="let expense of expenses" class="expense-list">
+    <ul>
+        <li>{{expense.name}}</li>
+        <li>{{expense.sum}}</li>
+        <li>{{expense.odometer}}</li>
+        <li>{{expense.date | date }}</li>
+        <li><a class="nav-link" routerLink="/expense/{{expense.id}}" routerLinkActive="active">view</a></li>
+    </ul>
+    <hr>
+  </div>
+</div>
+<app-add-expense></app-add-expense>

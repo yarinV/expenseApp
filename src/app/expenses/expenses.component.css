@@ -1,0 +1,9 @@
+li {
+    display: block;
+    padding-right: 1em;
+    text-align: center;
+}
+.expense-list{
+    width: 32%;
+    display: inline-block;
+}
