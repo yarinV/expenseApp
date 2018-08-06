@@ -8,8 +8,12 @@
         <li>{{expense.odometer}}</li>
         <li>{{expense.date | date }}</li>
         <li><a class="nav-link" routerLink="/expense/{{expense.id}}" routerLinkActive="active">view</a></li>
+        <li><a class="nav-link" routerLink="/expense-edit/{{expense.id}}" routerLinkActive="active">Edit</a></li>
     </ul>
     <hr>
+  </div>
+  <div *ngIf="showError">
+    Vehicle not seleted/Vehicle expnses is empty
   </div>
 </div>
 <app-add-expense></app-add-expense>

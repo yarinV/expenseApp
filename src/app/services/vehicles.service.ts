@@ -1,13 +1,14 @@
-import { Injectable } from "@angular/core";
+import { Injectable, EventEmitter } from "@angular/core";
 import { Vehicle } from "../vehicles/vehicles";
 import { mockVehicles } from "../vehicles/vehicles-mock";
-import {UUID} from "angular2-uuid";
 
 @Injectable({
     providedIn: 'root'
 })
 export class VehiclesService {
     vehicles: Vehicle[];
+    vehicleSelected: number;
+    vehicleChanged = new EventEmitter();
     constructor(){}
 
     get(){
@@ -17,7 +18,7 @@ export class VehiclesService {
 
     add(name:string){
         let vehicle = {
-            id: UUID.UUID(),
+            id: "100",
             name: name,
         }
         mockVehicles.push(vehicle);

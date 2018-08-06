@@ -15,4 +15,9 @@ export class VehiclesComponent implements OnInit {
     this.vehicles = this.vehiclesService.get();
   }
 
+  handleSelect(vehicle_id){
+    this.vehiclesService.vehicleSelected = Number(vehicle_id);
+    this.vehiclesService.vehicleChanged.emit();
+  }
+
 }

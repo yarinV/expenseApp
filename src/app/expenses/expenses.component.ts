@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+
 import { Expense } from './expense';
-import { expenseService } from '../services/expenses.service';
+import { ExpenseService } from '../services/expenses.service';
+
 
 @Component({
   selector: 'app-expenses',
@@ -8,16 +10,31 @@ import { expenseService } from '../services/expenses.service';
   styleUrls: ['./expenses.component.css']
 })
 export class ExpensesComponent implements OnInit {
-  expenses: Expense[];
-  constructor(private expenseService: expenseService) { }
+  expenses:[any];
+  vehicleId: number;
+  showError;
+
+  constructor(private expenseService: ExpenseService) { }
 
   ngOnInit() {
-    this.expenses = this.expenseService.getAll();
+    var that = this;
+    
     // Subscribe for updates
     this.expenseService.expensesChanged.subscribe(
-      (expenses)=>{
-        this.expenses = this.expenseService.getAll();
+      (data)=>{
+        that.expenses = data;
       }
     );
+
+    this.getExpenses();
+  }
+
+  getExpenses(){
+   
+    if(this.expenseService.expenses === undefined){
+      this.expenseService.getFromFireStore();
+    }else{
+      this.expenses = this.expenseService.expenses;
+    }
   }
 }

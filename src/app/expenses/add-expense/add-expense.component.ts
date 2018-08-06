@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Expense } from '../expense';
-import { expenseService } from '../../services/expenses.service';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
-import {UUID} from "angular2-uuid";
+import { ExpenseService } from '../../services/expenses.service';
+import { Expense } from '../expense';
+import { UUID } from 'angular2-uuid';
 
 @Component({
   selector: 'app-add-expense',
@@ -10,24 +12,38 @@ import {UUID} from "angular2-uuid";
   styleUrls: ['./add-expense.component.css']
 })
 export class addExpenseComponent implements OnInit {
-  expense = new Expense;
-  
-  constructor(private expenseService: expenseService) {
+  expense;
+  showError;
+  id;
+
+  constructor(private expenseService: ExpenseService, private route:ActivatedRoute, private location:Location) {
+    this.expense = {
+      name:"",
+      sum:"",
+      odometer:"",
+      date:""
+    }
   }
   
   ngOnInit() {
-    
+    let that = this;
+    this.id = +this.route.snapshot.paramMap.get('id');
+    if(this.id !== 0){
+      this.expenseService.get(this.id);
+
+      this.expenseService.documentFetched.subscribe((document)=>{
+        that.expense = document;
+      });      
+    }
   }
 
   submitForm(){
-    this.expense.id = UUID.UUID();
-    this.expense.date = Math.floor(Date.now() / 1000);
-    let that = this;
-    this.expenseService.add(this.expense).then(
-      ()=>{
-        this.expense = new Expense;
-      }
-    ).catch( error=> console.log(error) );
+    if(this.id === undefined){
+      this.id = UUID.UUID();
+    }
+
+    this.expenseService.add(this.expense, this.id);
+    this.id = 0;
   }
 
 }
