@@ -16,8 +16,9 @@ import { HeaderComponent } from './header/header.component';
 import { ExpenseComponent } from './expenses/expense/expense.component';
 import { environment } from '../environments/environment';
 import { ErrorsComponent } from './helpers/errors/errors.component';
-import { AuthService } from './services/auth.service';
 import { AuthGuard } from './helpers/auth.guard';
+import { UserService } from './services/user.service';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,7 @@ import { AuthGuard } from './helpers/auth.guard';
     AngularFireAuthModule,
     AngularFireDatabaseModule
   ],
-  providers: [AuthService, AuthGuard],
+  providers: [UserService, AuthGuard, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

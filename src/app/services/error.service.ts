@@ -14,6 +14,7 @@ export class ErrorService {
     'vehicle_not_found': 'Vehicle Not Found',
     'vehicle_no_id': 'Vehicle ID not set',
     'user_not_found': 'User Not Found',
+    'vehicleSelected_not_found': 'User Don\'t have default vehicle',
   };
 
   msg(msg){

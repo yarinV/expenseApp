@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from "@angular/core";
+import { Injectable, EventEmitter, NgZone } from "@angular/core";
 import { AngularFirestore } from 'angularfire2/firestore';
 
 import { Expense } from "../expenses/expense";
@@ -18,7 +18,8 @@ export class ExpenseService {
     constructor(
         private db: AngularFirestore,
         private vehiclesService:VehiclesService,
-        private errorService: ErrorService ){
+        private errorService: ErrorService,
+        private zone:NgZone ){
             // Vehicle changed get the expenses
             this.vehiclesService.vehicleSelectedChanged.subscribe(
                 ()=>{
@@ -45,15 +46,19 @@ export class ExpenseService {
             });
             if(that.expenses.length <= 0){
                 this.errorService.msg("no_expenses");
+            } else {
+                // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
+                that.zone.run(()=>{
+                    that.expensesChanged.emit(that.expenses);
+                });
             }
-            that.expensesChanged.emit(that.expenses);
         });
        
     }
 
     getAll(){
         if(this.expenses !== undefined){
-            return this.expenses;
+            this.expensesChanged.emit(this.expenses);
         } else {
             this.getFromFireStore();
         }
@@ -85,7 +90,10 @@ export class ExpenseService {
                 if(item.exists){
                     // if found resolve with the item
                     let document = {...item.data(), id: item.id};
-                    this.documentFetched.emit(document);
+                    // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
+                    this.zone.run(()=>{
+                        this.documentFetched.emit(document);
+                    })
                 }else{
                     // if not found reject and post error msg
                     this.errorService.msg("expense_not_found")

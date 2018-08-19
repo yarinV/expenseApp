@@ -20,13 +20,12 @@ export class ExpensesComponent implements OnInit {
     var that = this;
     
     // Subscribe for updates
-    this.zone.run(()=>{
     this.expenseService.expensesChanged.subscribe(
       (data)=>{
-        this.zone.run(that.expenses = data);
+        that.expenses = data;
       }
     );
-    });
+    
     this.getExpenses();
   }
 

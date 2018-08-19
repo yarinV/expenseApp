@@ -1,8 +1,8 @@
-import { Injectable, EventEmitter } from "@angular/core";
+import { Injectable, EventEmitter, NgZone } from "@angular/core";
 import { AngularFirestore } from "angularfire2/firestore";
 
 import { ErrorService } from "./error.service";
-import { AuthService } from "./auth.service";
+import { UserService } from "./user.service";
 
 @Injectable({
     providedIn: 'root'
@@ -11,21 +11,21 @@ export class VehiclesService {
     vehicles;
     vehiclesRef
     //handle vehicle select
-    vehicleSelected: string;
+    vehicleSelected;
     vehicleSelectedChanged = new EventEmitter();
 
     vehiclesChanged = new EventEmitter();
     documentFetched = new EventEmitter<any>();
     userDataFetched = new EventEmitter<any>();
         
-    constructor(private db: AngularFirestore,private errorService: ErrorService, public auth: AuthService ){
+    constructor(private db: AngularFirestore,private errorService: ErrorService, public userService: UserService,private zone:NgZone ){
         this.vehiclesRef = this.db.collection('vehicles');
     }
 
     getFromFireStore(){
         let that = this;
 
-        this.vehiclesRef.ref.where('uid', '==', this.auth.userData['uid']).onSnapshot((list)=>{
+        this.vehiclesRef.ref.where('uid', '==', this.userService.userData['uid']).onSnapshot((list)=>{
             that.vehicles = new Array<any>();
             list.forEach((item)=>{
                 that.vehicles.push({...item.data(),id:item.id});
@@ -33,14 +33,19 @@ export class VehiclesService {
             if(that.vehicles.length <= 0){
                 this.errorService.msg("no_vehicles");
             }
-            that.vehiclesChanged.emit(that.vehicles);
-            that.vehicleSelected = this.auth.userData['vehicleSelected'];
+            this.userService.getVehicleSelected().then(data=>{
+                that.vehicleSelected = data;
+            }).catch();
+            // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
+            that.zone.run(()=>{
+                that.vehiclesChanged.emit(that.vehicles)
+            });
         });
     }
 
     getAll(){
         if(this.vehicles !== undefined){
-            return this.vehicles;
+            this.vehiclesChanged.emit(this.vehicles);
         } else {
             this.getFromFireStore();
         }
@@ -72,7 +77,10 @@ export class VehiclesService {
             if(item.exists){
                 // if found resolve with the item
                 let document = {...item.data(), id: item.id};
-                this.documentFetched.emit(document);
+                 // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
+                this.zone.run(()=>{
+                    this.documentFetched.emit(document);
+                });
             }else{
                 // if not found reject and post error msg
                 this.errorService.msg("vehicle_not_found");
