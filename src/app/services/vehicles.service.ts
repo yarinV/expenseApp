@@ -11,7 +11,6 @@ export class VehiclesService {
     vehicles;
     vehiclesRef
     //handle vehicle select
-    vehicleSelected;
     vehicleSelectedChanged = new EventEmitter();
 
     vehiclesChanged = new EventEmitter();
@@ -33,13 +32,18 @@ export class VehiclesService {
             if(that.vehicles.length <= 0){
                 this.errorService.msg("no_vehicles");
             }
-            this.userService.getVehicleSelected().then(data=>{
-                that.vehicleSelected = data;
-            }).catch();
-            // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
-            that.zone.run(()=>{
-                that.vehiclesChanged.emit(that.vehicles)
-            });
+            if(this.userService.userData.vehicleSelected === undefined){
+                this.userService.getVehicleSelected().then(()=>{
+                    that.zone.run(()=>{
+                        that.vehiclesChanged.emit(that.vehicles)
+                    });
+                });
+            }else{
+                // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
+                that.zone.run(()=>{
+                    that.vehiclesChanged.emit(that.vehicles)
+                });
+            }
         });
     }
 
@@ -52,7 +56,6 @@ export class VehiclesService {
     }
 
     get(id){
-        debugger;
         // Check if data exist on the service
         if(this.vehicles != undefined){
             // check if item exist on service

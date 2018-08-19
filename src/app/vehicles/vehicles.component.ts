@@ -13,7 +13,7 @@ export class VehiclesComponent implements OnInit {
   vehicleName;
   showList;
   vehicles: Vehicle[];
-  constructor(private vehiclesService: VehiclesService, private route:ActivatedRoute, private userService: UserService) { }
+  constructor(private vehiclesService: VehiclesService, private route:ActivatedRoute, public userService: UserService) { }
 
   ngOnInit() {
     var that = this;
@@ -35,7 +35,6 @@ export class VehiclesComponent implements OnInit {
     let vehicle_id = event.split(',')[0];
     let vehicle_name = event.split(',')[1];
     this.vehicleName = vehicle_name;
-    this.vehiclesService.vehicleSelected = vehicle_id;
     this.userService.updateVehicleSelected(vehicle_id);
     this.vehiclesService.vehicleSelectedChanged.emit();
   }

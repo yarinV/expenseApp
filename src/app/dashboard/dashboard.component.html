@@ -1,6 +1,5 @@
 <div *ngIf="userService.user | async; then authenticated else guest"></div>
 <ng-template #authenticated>
-    <app-vehicles></app-vehicles>
     <app-expenses></app-expenses>
 </ng-template>
 

@@ -4,6 +4,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { Expense } from "../expenses/expense";
 import { VehiclesService } from "./vehicles.service";
 import { ErrorService } from "./error.service";
+import { UserService } from "./user.service";
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +19,7 @@ export class ExpenseService {
     constructor(
         private db: AngularFirestore,
         private vehiclesService:VehiclesService,
+        private userService:UserService,
         private errorService: ErrorService,
         private zone:NgZone ){
             // Vehicle changed get the expenses
@@ -122,7 +124,7 @@ export class ExpenseService {
     }
 
     checkVehicleSelected(showError?){
-        let vehicleSelected:string = this.vehiclesService.vehicleSelected;
+        let vehicleSelected:string = this.userService.userData.vehicleSelected;
         if(vehicleSelected === undefined){
             if(showError){
                 this.errorService.msg("vehicle_select");

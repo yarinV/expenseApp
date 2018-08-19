@@ -1,10 +1,9 @@
-import { Injectable, EventEmitter } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { ErrorService } from "./error.service";
 import { Observable, of } from 'rxjs';
 import { switchMap} from 'rxjs/operators';
 import { AngularFireAuth } from "angularfire2/auth";
-import { resolve } from "path";
 
 interface User {
   uid: string;
@@ -26,7 +25,9 @@ export class UserService {
   constructor(  
     private afAuth: AngularFireAuth,
     private db: AngularFirestore,
-    private errorService: ErrorService ){
+    private errorService: ErrorService,
+    private zone: NgZone,
+   ){
       this.userRef = this.db.collection('users');
   }
 
@@ -63,6 +64,7 @@ export class UserService {
   }
   
   updateVehicleSelected(vehicle_id){
+    // TODO: update db with vehicle selected
 
   }
 
@@ -76,10 +78,10 @@ export class UserService {
             let user = item.data(); 
             if(user.vehicleSelected !== undefined){
               this.userData.vehicleSelected = user.vehicleSelected;
-              resolve(user.vehicleSelected);
+              resolve();
             } else {
                 this.errorService.msg("vehicleSelected_not_found");
-                reject('');
+                reject();
             }
         });
       }

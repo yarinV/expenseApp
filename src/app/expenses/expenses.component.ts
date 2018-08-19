@@ -2,6 +2,8 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { environment } from '../../environments/environment';
 
 import { ExpenseService } from '../services/expenses.service';
+import { UserService } from '../services/user.service';
+import { ErrorService } from '../services/error.service';
 
 
 @Component({
@@ -14,7 +16,14 @@ export class ExpensesComponent implements OnInit {
   vehicleId: number;
   speed_unit = environment.speed_unit;
   
-  constructor(private expenseService: ExpenseService, private zone:NgZone) { }
+  constructor(private expenseService: ExpenseService, private userService: UserService, private errorService: ErrorService) {
+    // Get user selected vehicle and then call getExpenses
+    this.userService.getVehicleSelected().then(()=>{
+      this.getExpenses()
+    }).catch(()=>{
+      this.errorService.msg('vehicle_select');
+    })
+  }
 
   ngOnInit() {
     var that = this;
@@ -26,7 +35,7 @@ export class ExpensesComponent implements OnInit {
       }
     );
     
-    this.getExpenses();
+    
   }
 
   getExpenses(){
