@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
+import { environment } from '../../environments/environment';
 
-import { Expense } from './expense';
 import { ExpenseService } from '../services/expenses.service';
 
 
@@ -12,29 +12,26 @@ import { ExpenseService } from '../services/expenses.service';
 export class ExpensesComponent implements OnInit {
   expenses:[any];
   vehicleId: number;
-  showError;
-
-  constructor(private expenseService: ExpenseService) { }
+  speed_unit = environment.speed_unit;
+  
+  constructor(private expenseService: ExpenseService, private zone:NgZone) { }
 
   ngOnInit() {
     var that = this;
     
     // Subscribe for updates
+    this.zone.run(()=>{
     this.expenseService.expensesChanged.subscribe(
       (data)=>{
-        that.expenses = data;
+        this.zone.run(that.expenses = data);
       }
     );
-
+    });
     this.getExpenses();
   }
 
   getExpenses(){
-   
-    if(this.expenseService.expenses === undefined){
-      this.expenseService.getFromFireStore();
-    }else{
-      this.expenses = this.expenseService.expenses;
-    }
+    this.expenseService.getAll();
   }
+
 }

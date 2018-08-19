@@ -13,21 +13,25 @@ import { UUID } from 'angular2-uuid';
 })
 export class addExpenseComponent implements OnInit {
   expense;
-  showError;
   id;
 
   constructor(private expenseService: ExpenseService, private route:ActivatedRoute, private location:Location) {
+    this.clearData();
+  }
+
+  clearData(){
     this.expense = {
       name:"",
       sum:"",
       odometer:"",
       date:""
     }
+    this.id = undefined;
   }
   
   ngOnInit() {
     let that = this;
-    this.id = +this.route.snapshot.paramMap.get('id');
+    this.id = this.route.snapshot.paramMap.get('id');
     if(this.id !== 0){
       this.expenseService.get(this.id);
 
@@ -42,8 +46,8 @@ export class addExpenseComponent implements OnInit {
       this.id = UUID.UUID();
     }
 
-    this.expenseService.add(this.expense, this.id);
-    this.id = 0;
+    this.expenseService.addOrUpdate(this.expense, this.id);
+    this.clearData();
   }
 
 }

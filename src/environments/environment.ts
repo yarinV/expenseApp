@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  speed_unit: 'km',
   firebase: {
     apiKey: "AIzaSyBgcdIS8KG6NGlj6G5oZCMuP1B6KnUtmCk",
     authDomain: "expense-app-63d5b.firebaseapp.com",

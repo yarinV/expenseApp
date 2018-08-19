@@ -1,11 +1,9 @@
 import { Injectable, EventEmitter } from "@angular/core";
 import { AngularFirestore } from 'angularfire2/firestore';
-import { AngularFireAuth } from 'angularfire2/auth';
 
 import { Expense } from "../expenses/expense";
 import { VehiclesService } from "./vehicles.service";
 import { ErrorService } from "./error.service";
-import { resolve } from "dns";
 
 @Injectable({
     providedIn: 'root'
@@ -13,21 +11,19 @@ import { resolve } from "dns";
 export class ExpenseService {
     expenses;
     expenseRef;
+
     expensesChanged = new EventEmitter<Expense[]>();
     documentFetched = new EventEmitter<any>();
 
     constructor(
-        public afAuth: AngularFireAuth,
         private db: AngularFirestore,
         private vehiclesService:VehiclesService,
         private errorService: ErrorService ){
-            
-            this.afAuth.auth.signInAnonymously();
-            
             // Vehicle changed get the expenses
-            this.vehiclesService.vehicleChanged.subscribe(
+            this.vehiclesService.vehicleSelectedChanged.subscribe(
                 ()=>{
                     this.getFromFireStore();
+                    this.errorService.clear();
                 }
             )
             
@@ -38,43 +34,52 @@ export class ExpenseService {
 
         let that = this;
         let vehicleSelected = this.checkVehicleSelected();
-        if(!vehicleSelected){
+        if(vehicleSelected === ''){
             return false;
         }
         
-        // subscribe        
-        this.db.collection('expenses').ref.where('vehicleId', '==', +vehicleSelected).onSnapshot((list)=>{
+        this.expenseRef.ref.where('vehicleId', '==', vehicleSelected).onSnapshot((list)=>{
             that.expenses = new Array<any>();
             list.forEach((item)=>{
                 that.expenses.push({...item.data(),id:item.id});
             });
+            if(that.expenses.length <= 0){
+                this.errorService.msg("no_expenses");
+            }
             that.expensesChanged.emit(that.expenses);
         });
        
     }
 
+    getAll(){
+        if(this.expenses !== undefined){
+            return this.expenses;
+        } else {
+            this.getFromFireStore();
+        }
+    }
+
     get(id){
-            // Check if data exist on the service
-            if(this.expenses != undefined){
-                // check if item exist on service
-                let document = this.expenses.filter((item)=>{
-                    return id === +item.id;
-                })
-                if(document.length < 0){
-                    // if found return item
-                    this.documentFetched.emit(document);
-                }else{
-                    this.getDocFromFirebase(id);
-                }
+        // Check if data exist on the service
+        if(this.expenses != undefined){
+            // check if item exist on service
+            let document = this.expenses.filter((item)=>{
+                return id === +item.id;
+            })
+            if(document.length < 0){
+                // if found return item
+                this.documentFetched.emit(document);
             }else{
                 this.getDocFromFirebase(id);
             }
-        
+        }else{
+            this.getDocFromFirebase(id);
+        }
     }
 
 
     getDocFromFirebase(doc){
-            this.db.collection('expenses').ref.doc(String(doc)).onSnapshot((item)=>{
+             this.expenseRef.ref.doc(String(doc)).onSnapshot((item)=>{
      
                 // if not found try to get item from DB 
                 if(item.exists){
@@ -83,21 +88,21 @@ export class ExpenseService {
                     this.documentFetched.emit(document);
                 }else{
                     // if not found reject and post error msg
-                    this.errorService.msg("Expense not found")
+                    this.errorService.msg("expense_not_found")
                 }
 
             });
     }
 
-    add(expense, id){
+    addOrUpdate(expense, id){
         
-        let vehicleSelected:number = this.checkVehicleSelected(false);
-        if(vehicleSelected === 0 && expense.vehicleId === undefined){
+        let vehicleSelected:string = this.checkVehicleSelected(true);
+        if(vehicleSelected === '' && expense.vehicleId === undefined){
             return false;
         }
 
         if(id === undefined){
-            this.errorService.msg("Expense ID not set");
+            this.errorService.msg("expense_no_id");
             return false;
         }
 
@@ -109,12 +114,12 @@ export class ExpenseService {
     }
 
     checkVehicleSelected(showError?){
-        let vehicleSelected:number = this.vehiclesService.vehicleSelected;
+        let vehicleSelected:string = this.vehiclesService.vehicleSelected;
         if(vehicleSelected === undefined){
             if(showError){
-                this.errorService.msg("Please Select Vehicle");
+                this.errorService.msg("vehicle_select");
             }
-            return 0;
+            return '';
         }
         return vehicleSelected;
     }

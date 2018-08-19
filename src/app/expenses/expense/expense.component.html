@@ -1,5 +1,6 @@
 <ul>
-  <li>name: {{item?.name}}</li>
-  <li>sum: {{item?.sum}}</li>
-  <li>odometer: {{item?.odometer}}</li>
+  <li>{{item?.name}}</li>
+  <li>{{item?.sum | currency:'USD':true}}</li>
+  <li>{{item?.odometer | number}} {{speed_unit}}</li>
+  <li>{{item?.date | date }}</li>
 </ul>

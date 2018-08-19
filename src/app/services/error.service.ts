@@ -1,21 +1,26 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { VehiclesService } from './vehicles.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ErrorService {
   newError = new EventEmitter<string>();
-  
-  constructor(private vehiclesService: VehiclesService) {
-    this.vehiclesService.vehicleChanged.subscribe(
-      ()=>{
-        this.newError.emit("");
-      }
-  )     
-   }
+  MESSAGES = {
+    'no_expenses': 'There are no expenses for this vehicle',
+    'expense_not_found': 'Expense Not Found',
+    'expense_no_id': 'Expense ID not set',
+    'vehicle_select': 'Please Select Vehicle',
+    'no_vehicles': 'There are no vehicles in the db',
+    'vehicle_not_found': 'Vehicle Not Found',
+    'vehicle_no_id': 'Vehicle ID not set',
+    'user_not_found': 'User Not Found',
+  };
 
-  msg(val){
-    this.newError.emit(val);
+  msg(msg){
+    this.newError.emit(this.MESSAGES[msg]);
+  }
+
+  clear(){
+    this.newError.emit('');
   }
 }

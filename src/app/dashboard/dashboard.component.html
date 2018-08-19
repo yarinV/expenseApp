@@ -1,2 +1,10 @@
-<app-vehicles></app-vehicles>
-<app-expenses></app-expenses>
+<div *ngIf="auth.user | async; then authenticated else guest"></div>
+<ng-template #authenticated>
+    <app-vehicles></app-vehicles>
+    <app-expenses></app-expenses>
+</ng-template>
+
+<ng-template #guest>
+    <h3>Hello guest please Login first</h3>
+    <button (click)="auth.googleLogin()"><i class="fa fa-google"></i> Connect Google</button>
+</ng-template>

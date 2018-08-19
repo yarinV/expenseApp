@@ -1,6 +1,5 @@
-<h2>My Vehicles</h2>
-<ul class="vehicle">
-  <li *ngFor="let vehicle of vehicles">
-    <button (click)="handleSelect(vehicle.id)"><span class="badge">{{vehicle.id}}</span> {{vehicle.name}}</button>
-  </li>
-</ul>
+<select class="vehicle" (change)="handleSelect($event.target.value)">
+    <option *ngFor="let vehicle of vehicles" value='{{vehicle.id}},{{vehicle.name}}'>
+      {{vehicle.name}}
+    </option>
+  </select>
