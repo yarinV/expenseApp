@@ -34,7 +34,7 @@ export class VehiclesService {
             }
             // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
             that.zone.run(()=>{
-                that.vehiclesChanged.emit(that.vehicles)
+                that.vehiclesChanged.emit(that.vehicles);
             });
         });
     }

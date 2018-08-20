@@ -2,14 +2,7 @@
 <div class="expenses-list">
     <hr>
   <div *ngFor="let expense of expenses" class="expense-list">
-    <ul>
-        <li>{{expense.name}}</li>
-        <li>{{expense.sum | currency:'USD':true}}</li>
-        <li>{{expense.odometer | number}} {{speed_unit}}</li>
-        <li>{{expense.date | date }}</li>
-        <li><a class="nav-link" routerLink="/expense/{{expense.id}}" routerLinkActive="active">view</a></li>
-        <li><a class="nav-link" routerLink="/expense-edit/{{expense.id}}" routerLinkActive="active">Edit</a></li>
-    </ul>
+    <app-expense [expenseInput]="expense"></app-expense>
     <hr>
   </div>
 </div>
