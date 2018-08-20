@@ -36,24 +36,28 @@ export class ExpenseService {
     getFromFireStore(){
 
         let that = this;
-        let vehicleSelected = this.checkVehicleSelected();
-        if(vehicleSelected === ''){
-            return false;
-        }
+        this.checkVehicleSelected().then((data)=>{
+            let vehicleSelected = data;
         
-        this.expenseRef.ref.where('vehicleId', '==', vehicleSelected).onSnapshot((list)=>{
-            that.expenses = new Array<any>();
-            list.forEach((item)=>{
-                that.expenses.push({...item.data(),id:item.id});
-            });
-            if(that.expenses.length <= 0){
-                this.errorService.msg("no_expenses");
-            } else {
-                // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
-                that.zone.run(()=>{
-                    that.expensesChanged.emit(that.expenses);
-                });
+            if(vehicleSelected === ''){
+                return false;
             }
+            
+            this.expenseRef.ref.where('vehicleId', '==', vehicleSelected).onSnapshot((list)=>{
+                that.expenses = new Array<any>();
+                list.forEach((item)=>{
+                    that.expenses.push({...item.data(),id:item.id});
+                });
+                if(that.expenses.length <= 0){
+                    this.errorService.msg("no_expenses");
+                } else {
+                    // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
+                    that.zone.run(()=>{
+                        that.expensesChanged.emit(that.expenses);
+                    });
+                }
+            });
+
         });
        
     }
@@ -106,32 +110,41 @@ export class ExpenseService {
 
     addOrUpdate(expense, id){
         
-        let vehicleSelected:string = this.checkVehicleSelected(true);
-        if(vehicleSelected === '' && expense.vehicleId === undefined){
-            return false;
-        }
-
-        if(id === undefined){
-            this.errorService.msg("expense_no_id");
-            return false;
-        }
-
-        let timestamp = Math.floor(Date.now() / 1000);
-        expense.date = timestamp;
-        expense.vehicleId = vehicleSelected;
+        this.checkVehicleSelected(true).then((data)=>{
+            let vehicleSelected = data;
+            let timestamp = Math.floor(Date.now());
         
-        this.expenseRef.doc(String(id)).set(expense);
+            if(vehicleSelected == '' && expense.vehicleId === undefined){
+                return false;
+            }
+
+            if(id === undefined){
+                this.errorService.msg("expense_no_id");
+                return false;
+            }
+
+            expense.date = expense.date || timestamp;
+            expense.vehicleId = vehicleSelected;
+            
+            this.expenseRef.doc(String(id)).set(expense);
+
+        });
     }
 
-    checkVehicleSelected(showError?){
+    async checkVehicleSelected(showError?){
         let vehicleSelected:string = this.userService.userData.vehicleSelected;
-        if(vehicleSelected === undefined){
-            if(showError){
-                this.errorService.msg("vehicle_select");
+        if(vehicleSelected != undefined){
+            return vehicleSelected;
+        } else {
+            // Get user selected vehicle from DB
+            let newVehicleSelected = await this.userService.getVehicleSelected(false);
+            if(newVehicleSelected === ''){
+                if(showError){
+                    this.errorService.msg("vehicle_select");
+                } 
             }
-            return '';
+            return newVehicleSelected;            
         }
-        return vehicleSelected;
     }
 
 }

@@ -32,18 +32,10 @@ export class VehiclesService {
             if(that.vehicles.length <= 0){
                 this.errorService.msg("no_vehicles");
             }
-            if(this.userService.userData.vehicleSelected === undefined){
-                this.userService.getVehicleSelected().then(()=>{
-                    that.zone.run(()=>{
-                        that.vehiclesChanged.emit(that.vehicles)
-                    });
-                });
-            }else{
-                // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
-                that.zone.run(()=>{
-                    that.vehiclesChanged.emit(that.vehicles)
-                });
-            }
+            // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
+            that.zone.run(()=>{
+                that.vehiclesChanged.emit(that.vehicles)
+            });
         });
     }
 

@@ -17,14 +17,8 @@ export class ExpensesComponent implements OnInit {
   speed_unit = environment.speed_unit;
   
   constructor(private expenseService: ExpenseService, private userService: UserService, private errorService: ErrorService) {
-    // Get user selected vehicle and then call getExpenses
-    this.userService.getVehicleSelected().then(()=>{
-      this.getExpenses()
-    }).catch(()=>{
-      this.errorService.msg('vehicle_select');
-    })
   }
-
+  
   ngOnInit() {
     var that = this;
     
@@ -34,8 +28,7 @@ export class ExpensesComponent implements OnInit {
         that.expenses = data;
       }
     );
-    
-    
+    this.getExpenses();
   }
 
   getExpenses(){

@@ -31,7 +31,7 @@ export class addExpenseComponent implements OnInit {
   
   ngOnInit() {
     let that = this;
-    this.id = this.route.snapshot.paramMap.get('id');
+    this.id = this.route.snapshot.paramMap.get('id') || undefined;
     if(this.id !== 0){
       this.expenseService.get(this.id);
 

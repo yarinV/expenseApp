@@ -68,23 +68,22 @@ export class UserService {
 
   }
 
-  getVehicleSelected(){
+  getVehicleSelected(showError?){
     return new Promise((resolve, reject)=>{
-
-      if(this.userData.vehicleSelected !== undefined){
-        this.userData.vehicleSelected;
-      } else {
+     
         this.userRef.ref.doc(this.userData.uid).onSnapshot((item)=>{
             let user = item.data(); 
             if(user.vehicleSelected !== undefined){
               this.userData.vehicleSelected = user.vehicleSelected;
-              resolve();
+              resolve(user.vehicleSelected);
             } else {
-                this.errorService.msg("vehicleSelected_not_found");
+                if(showError){
+                  this.errorService.msg("vehicleSelected_not_found");
+                }
                 reject();
             }
         });
-      }
+      
     })
   }
 }
