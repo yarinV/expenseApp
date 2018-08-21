@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { VehiclesService } from '../services/vehicles.service';
-import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -12,22 +11,33 @@ export class VehiclesComponent implements OnInit {
   vehicleName;
   showList;
   vehicles: Vehicle[];
-  constructor(private vehiclesService: VehiclesService, private route:ActivatedRoute, public userService: UserService) { }
+  constructor(public vehiclesService: VehiclesService, public userService: UserService) { }
 
   ngOnInit() {
     var that = this;
-    const path = this.route.snapshot.paramMap.get('path');
     // Subscribe for updates
       that.vehiclesService.vehiclesChanged.subscribe(
         (data)=>{
           that.vehicles = data;
         }
       )
-    this.getVehicles();
+    this.getAll();
   }
 
-  getVehicles(){
+  getAll(){
     this.vehiclesService.getAll(this.userService.userData.uid);
+  }
+
+  get(){
+
+  }
+
+  update(){
+
+  }
+
+  delete(){
+    
   }
   
   handleSelect(event){

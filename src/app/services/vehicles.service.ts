@@ -17,7 +17,11 @@ export class VehiclesService {
     vehiclesChanged = new EventEmitter();
     documentFetched = new EventEmitter<any>();
         
-    constructor(private db: AngularFirestore,private errorService: ErrorService, private zone:NgZone ){
+    constructor(
+     private db: AngularFirestore,
+     private errorService: ErrorService,
+     private zone:NgZone
+    ){
         this.vehiclesRef = this.db.collection('vehicles');
     }
 

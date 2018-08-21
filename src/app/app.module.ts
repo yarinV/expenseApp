@@ -19,6 +19,9 @@ import { ErrorsComponent } from './helpers/errors/errors.component';
 import { AuthGuard } from './helpers/auth.guard';
 import { UserService } from './services/user.service';
 import { AuthService } from './services/auth.service';
+import { DeleteButtonComponent } from './components/delete-button/delete-button.component';
+import { ViewButtonComponent } from './components/view-button/view-button.component';
+import { VehiclesListComponent } from './vehicles/vehicles-list/vehicles-list.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +33,9 @@ import { AuthService } from './services/auth.service';
     HeaderComponent,
     ExpenseComponent,
     ErrorsComponent,
+    DeleteButtonComponent,
+    ViewButtonComponent,
+    VehiclesListComponent,
   ],
   imports: [
     BrowserModule,

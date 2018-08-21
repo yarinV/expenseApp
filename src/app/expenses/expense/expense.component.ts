@@ -11,33 +11,27 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./expense.component.css']
 })
 export class ExpenseComponent implements OnInit {
-  item;
+  doc;
   speed_unit = environment.speed_unit;
-  @Input('expenseInput') expenseInput;
+  @Input('document') document;
 
   constructor(private route:ActivatedRoute, private expenseService:ExpenseService, private location:Location) { }
 
   ngOnInit() {
-    // will show the expense by route or as a template item 
-    if(this.route.snapshot.paramMap.get('id') == null){
-      this.item = this.expenseInput;
+    // will show the expense by route or as a template doc
+    let id = this.route.snapshot.paramMap.get('id');
+    if( id == null){
+      this.doc = this.document;
     }else{
-      this.getExpense();
+      this.get(id);
     }
   }
 
-  getExpense(){
-    let that = this;
-    const id = this.route.snapshot.paramMap.get('id');
+  get(id){
     this.expenseService.get(id);
-
     this.expenseService.documentFetched.subscribe((document)=>{
-      that.item = document;
+      this.doc = document;
     });
-  }
-
-  deleteExpense(id){
-    this.expenseService.delete(id);
   }
 
   goBack(): void{

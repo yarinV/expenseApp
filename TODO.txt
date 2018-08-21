@@ -1,0 +1,6 @@
+delete vehicle
+edit vehicle
+admin panel
+calculate expenses
+design ui
+encapsulate services

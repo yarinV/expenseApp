@@ -29,10 +29,10 @@ export class ExpensesComponent implements OnInit {
       }
     );
     // get expenses but done show errors
-    this.getExpenses();
+    this.getAll();
   }
 
-  getExpenses(){
+  getAll(){
     this.expenseService.getAll();
   }
 

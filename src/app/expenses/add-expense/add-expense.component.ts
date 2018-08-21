@@ -12,7 +12,7 @@ import { UUID } from 'angular2-uuid';
   styleUrls: ['./add-expense.component.css']
 })
 export class addExpenseComponent implements OnInit {
-  expense;
+  doc;
   id;
 
   constructor(private expenseService: ExpenseService, private route:ActivatedRoute, private location:Location) {
@@ -26,7 +26,7 @@ export class addExpenseComponent implements OnInit {
       this.expenseService.get(this.id);
 
       this.expenseService.documentFetched.subscribe((document)=>{
-        that.expense = document;
+        that.doc = document;
       });      
     }
   }
@@ -36,20 +36,16 @@ export class addExpenseComponent implements OnInit {
       this.id = UUID.UUID();
     }
 
-    this.expenseService.addOrUpdate(this.expense, this.id, ()=>{
+    this.expenseService.addOrUpdate(this.doc, this.id, ()=>{
       // clear the data if not show individual expense
       if(this.route.snapshot.paramMap.get('id') !== undefined){
         this.clearData();
       }
     });
   }
-
-  delete(id){
-    this.expenseService.delete(id);
-  }
   
   clearData(){
-    this.expense = {
+    this.doc = {
       name:"",
       sum:"",
       odometer:"",

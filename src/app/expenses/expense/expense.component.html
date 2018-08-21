@@ -1,8 +1,8 @@
-<ul *ngIf="item">
-  <li>{{item.name}}</li>
-  <li>{{item.sum | currency:'USD':true}}</li>
-  <li>{{item.odometer | number}} {{speed_unit}}</li>
-  <li>{{item.date | date }}</li>
-  <button type="button" class="btn btn-success" routerLink="/expense-edit/{{item.id}}">View</button>
-  <button type="button" class="btn btn-danger" (click)="deleteExpense(item.id)">Delete</button>
+<ul *ngIf="doc">
+  <li>{{doc.name}}</li>
+  <li>{{doc.sum | currency:'USD':true}}</li>
+  <li>{{doc.odometer | number}} {{speed_unit}}</li>
+  <li>{{doc.date | date }}</li>
+  <view-button [id]='doc.id'></view-button>
+  <delete-button [id]='doc.id'></delete-button>
 </ul>
