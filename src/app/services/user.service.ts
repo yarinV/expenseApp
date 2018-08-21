@@ -64,26 +64,32 @@ export class UserService {
   }
   
   updateVehicleSelected(vehicle_id){
-    // TODO: update db with vehicle selected
-
+    let user = this.db.doc(`users/${this.userData.uid}`);
+    user.update({'vehicleSelected':vehicle_id});
   }
 
   getVehicleSelected(showError?){
     return new Promise((resolve, reject)=>{
-     
-        this.userRef.ref.doc(this.userData.uid).onSnapshot((item)=>{
-            let user = item.data(); 
-            if(user.vehicleSelected !== undefined){
-              this.userData.vehicleSelected = user.vehicleSelected;
-              resolve(user.vehicleSelected);
-            } else {
-                if(showError){
-                  this.errorService.msg("vehicleSelected_not_found");
-                }
-                reject();
-            }
-        });
-      
-    })
+      if(!this.userData){
+        if(showError){
+          this.errorService.msg("user_not_found");
+        }
+        reject();
+      }
+
+      this.userRef.ref.doc(this.userData.uid).onSnapshot((item)=>{
+          let user = item.data(); 
+          if(user.vehicleSelected !== undefined){
+            this.userData.vehicleSelected = user.vehicleSelected;
+            resolve(user.vehicleSelected);
+          } else {
+              if(showError){
+                this.errorService.msg("vehicleSelected_not_found");
+              }
+              reject();
+          }
+      });
+    });
   }
+
 }

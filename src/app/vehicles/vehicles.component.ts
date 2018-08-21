@@ -39,4 +39,7 @@ export class VehiclesComponent implements OnInit {
     this.vehiclesService.vehicleSelectedChanged.emit();
   }
 
+  test(vehicle){
+    return vehicle.id === this.userService.userData.vehicleSelected;
+  }
 }
