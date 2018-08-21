@@ -13,7 +13,7 @@ export class ErrorService {
     'no_vehicles': 'There are no vehicles in the db',
     'vehicle_not_found': 'Vehicle Not Found',
     'vehicle_no_id': 'Vehicle ID not set',
-    'user_not_found': 'User Not Found',
+    'please_login': 'Please login',
     'vehicleSelected_not_found': 'User Don\'t have default vehicle',
   };
 

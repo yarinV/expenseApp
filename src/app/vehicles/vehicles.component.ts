@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { VehiclesService } from '../services/vehicles.service';
-import { Vehicle } from './vehicles';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../services/user.service';
 
@@ -32,14 +31,10 @@ export class VehiclesComponent implements OnInit {
   }
   
   handleSelect(event){
-    let vehicle_id = event.split(',')[0];
-    let vehicle_name = event.split(',')[1];
-    this.vehicleName = vehicle_name;
-    this.userService.updateVehicleSelected(vehicle_id);
+    let id = event.split(',')[0];
+    let name = event.split(',')[1];
+    this.vehicleName = name;
+    this.userService.updateVehicleSelected(id, name);
     this.vehiclesService.vehicleSelectedChanged.emit();
-  }
-
-  test(vehicle){
-    return vehicle.id === this.userService.userData.vehicleSelected;
   }
 }

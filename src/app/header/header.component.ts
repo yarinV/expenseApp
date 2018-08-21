@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-import { UserService } from '../services/user.service';
+import { VehiclesService } from '../services/vehicles.service';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +10,7 @@ import { UserService } from '../services/user.service';
 export class HeaderComponent implements OnInit {
   vehicleSelected;
 
-  constructor(public auth: AuthService, public userService: UserService) {
+  constructor(public auth: AuthService, public vehicleService: VehiclesService) {
     
    }
 

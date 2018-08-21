@@ -2,48 +2,30 @@ import { Injectable, EventEmitter, NgZone } from "@angular/core";
 import { AngularFirestore } from "angularfire2/firestore";
 
 import { ErrorService } from "./error.service";
-import { UserService } from "./user.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class VehiclesService {
-    vehicles;
-    vehiclesRef
+    vehicle:Vehicle;
+    vehicles:Array<Vehicle> = [];
+
+    vehiclesRef;
     //handle vehicle select
     vehicleSelectedChanged = new EventEmitter();
-
+    vehi
     vehiclesChanged = new EventEmitter();
     documentFetched = new EventEmitter<any>();
-    userDataFetched = new EventEmitter<any>();
         
-    constructor(private db: AngularFirestore,private errorService: ErrorService, public userService: UserService,private zone:NgZone ){
+    constructor(private db: AngularFirestore,private errorService: ErrorService, private zone:NgZone ){
         this.vehiclesRef = this.db.collection('vehicles');
     }
 
-    getFromFireStore(){
-        let that = this;
-
-        this.vehiclesRef.ref.where('uid', '==', this.userService.userData['uid']).onSnapshot((list)=>{
-            that.vehicles = new Array<any>();
-            list.forEach((item)=>{
-                that.vehicles.push({...item.data(),id:item.id});
-            });
-            if(that.vehicles.length <= 0){
-                this.errorService.msg("no_vehicles");
-            }
-            // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
-            that.zone.run(()=>{
-                that.vehiclesChanged.emit(that.vehicles);
-            });
-        });
-    }
-
-    getAll(){
-        if(this.vehicles !== undefined){
+    getAll(uid){
+        if(this.vehicles.length > 0){
             this.vehiclesChanged.emit(this.vehicles);
         } else {
-            this.getFromFireStore();
+            this.getFromFireStore(uid);
         }
     }
 
@@ -63,6 +45,27 @@ export class VehiclesService {
         }else{
             this.getDocFromFirebase(id);
         }
+    }
+
+    getFromFireStore(uid){
+        if(!uid){
+            return false;
+        }
+
+        let that = this;
+
+        this.vehiclesRef.ref.where('uid', '==', uid).onSnapshot((list)=>{
+            list.forEach((item)=>{
+                that.vehicles.push({...item.data(),id:item.id});
+            });
+            if(that.vehicles.length <= 0){
+                this.errorService.msg("no_vehicles");
+            }
+            // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
+            that.zone.run(()=>{
+                that.vehiclesChanged.emit(that.vehicles);
+            });
+        });
     }
 
     getDocFromFirebase(doc){

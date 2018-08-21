@@ -1,3 +1,1 @@
-1. fix selected in vehicle
-2. add selected vehicle to header
-3. add delete function to expense
+add delete function to expense

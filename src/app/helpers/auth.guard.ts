@@ -4,10 +4,11 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from
 import { Observable } from 'rxjs';
 import { tap, map, take } from 'rxjs/operators';
 import { UserService } from '../services/user.service';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private userService: UserService, private authService:AuthService, private router: Router) {}
 
   canActivate(next: ActivatedRouteSnapshot,state: RouterStateSnapshot): Observable<boolean> {
 
@@ -15,12 +16,10 @@ export class AuthGuard implements CanActivate {
            take(1),
            map(user => !!user),
            tap(loggedIn => {
-             if (!loggedIn) {
-               console.log('access denied')
-               this.router.navigate(['/']);
-             } else {
-               this.userService.getVehicleSelected();
-             }
+              if (!loggedIn) {
+                  console.log('access denied')
+                  this.router.navigate(['/']);
+              }
          })
     )
   }
