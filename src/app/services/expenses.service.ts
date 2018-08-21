@@ -108,7 +108,7 @@ export class ExpenseService {
             });
     }
 
-    addOrUpdate(expense, id){
+    addOrUpdate(expense, id, cb){
         
         this.checkVehicleSelected(true).then((data)=>{
             let vehicleSelected = data;
@@ -127,13 +127,19 @@ export class ExpenseService {
             expense.vehicleId = vehicleSelected;
             
             this.expenseRef.doc(String(id)).set(expense);
-
+            if(typeof cb == "function"){
+                cb();
+            }
         });
     }
 
-    delete(id?){
-        console.log(id);
-        
+    delete(id){
+        this.expenseRef.ref.doc(id).delete()
+        .then(()=>{
+            console.log("Document successfully deleted!")
+        }).catch((error)=>{
+            console.error("Error removing document: ", error);
+        })
     }
     
     async checkVehicleSelected(showError?){

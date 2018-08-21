@@ -19,20 +19,10 @@ export class addExpenseComponent implements OnInit {
     this.clearData();
   }
 
-  clearData(){
-    this.expense = {
-      name:"",
-      sum:"",
-      odometer:"",
-      date:""
-    }
-    this.id = undefined;
-  }
-  
   ngOnInit() {
     let that = this;
     this.id = this.route.snapshot.paramMap.get('id') || undefined;
-    if(this.id !== 0){
+    if(this.id !== undefined){
       this.expenseService.get(this.id);
 
       this.expenseService.documentFetched.subscribe((document)=>{
@@ -46,8 +36,25 @@ export class addExpenseComponent implements OnInit {
       this.id = UUID.UUID();
     }
 
-    this.expenseService.addOrUpdate(this.expense, this.id);
-    this.clearData();
+    this.expenseService.addOrUpdate(this.expense, this.id, ()=>{
+      // clear the data if not show individual expense
+      if(this.route.snapshot.paramMap.get('id') !== undefined){
+        this.clearData();
+      }
+    });
   }
 
+  delete(id){
+    this.expenseService.delete(id);
+  }
+  
+  clearData(){
+    this.expense = {
+      name:"",
+      sum:"",
+      odometer:"",
+      date:""
+    }
+    this.id = undefined;
+  }
 }

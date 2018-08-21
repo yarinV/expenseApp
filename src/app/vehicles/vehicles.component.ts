@@ -27,7 +27,7 @@ export class VehiclesComponent implements OnInit {
   }
 
   getVehicles(){
-    this.vehiclesService.getAll();
+    this.vehiclesService.getAll(this.userService.userData.uid);
   }
   
   handleSelect(event){
@@ -36,5 +36,9 @@ export class VehiclesComponent implements OnInit {
     this.vehicleName = name;
     this.userService.updateVehicleSelected(id, name);
     this.vehiclesService.vehicleSelectedChanged.emit();
+  }
+
+  match(vehicle){
+    return vehicle.id === this.userService.userData.vehicleSelected;
   }
 }

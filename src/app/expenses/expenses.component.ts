@@ -28,6 +28,7 @@ export class ExpensesComponent implements OnInit {
         that.expenses = data;
       }
     );
+    // get expenses but done show errors
     this.getExpenses();
   }
 
