@@ -50,12 +50,13 @@ export class ExpenseService {
                 });
                 if(that.expenses.length <= 0){
                     this.errorService.msg("no_expenses");
-                } else {
-                    // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
-                    that.zone.run(()=>{
-                        that.expensesChanged.emit(that.expenses);
-                    });
-                }
+                } 
+                // return empty or list with data
+                // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
+                that.zone.run(()=>{
+                    that.expensesChanged.emit(that.expenses);
+                });
+                
             });
 
         });

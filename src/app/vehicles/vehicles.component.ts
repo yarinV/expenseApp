@@ -44,8 +44,14 @@ export class VehiclesComponent implements OnInit {
     let id = event.split(',')[0];
     let name = event.split(',')[1];
     this.vehicleName = name;
-    this.userService.updateVehicleSelected(id, name);
-    this.vehiclesService.vehicleSelectedChanged.emit();
+    //TODO: add loadeing animation
+    // update user selectedVechile then get list of vehicles or show error if failed to update db
+    this.userService.updateVehicleSelected(id, name).then(()=>{
+      this.vehiclesService.vehicleSelectedChanged.emit();
+    }).catch(()=>{
+      console.log('update user selected vehicle failed');
+    })
+
   }
 
   match(vehicle){

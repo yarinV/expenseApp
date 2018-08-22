@@ -59,6 +59,7 @@ export class VehiclesService {
         let that = this;
 
         this.vehiclesRef.ref.where('uid', '==', uid).onSnapshot((list)=>{
+            that.vehicles = [];
             list.forEach((item)=>{
                 that.vehicles.push({...item.data(),id:item.id});
             });

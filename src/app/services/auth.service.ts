@@ -15,9 +15,7 @@ export class AuthService {
     private vehicleService: VehiclesService,
   ){
 
-    this.userService.getUser(()=>{
-      this.afterLoginDo();
-    });
+    this.userService.getUser();
   }
 
   googleLogin() {
@@ -38,17 +36,4 @@ export class AuthService {
     });
   }
 
-  afterLoginDo(){
-    // get user selected vehicle id & get the vehicle with the selected vehicle id and assign it to vehicle in vehicleService
-    // then header.component can display the selected vehicle
-    if(this.vehicleService.vehicle !== undefined){
-      return false;
-    }
-    this.userService.getVehicleSelected().then(id=>{
-      this.vehicleService.get(id)
-      this.vehicleService.documentFetched.subscribe(doc=>{
-        this.vehicleService.vehicle = doc;
-      })
-    });
-  }
 }

@@ -9,12 +9,13 @@ import { ExpenseService } from '../../services/expenses.service';
 export class DeleteButtonComponent implements OnInit {
   constructor(private expenseService: ExpenseService) { }
   @Input('id') id;
+  @Input('service') service;
 
   ngOnInit() {
   }
 
-  delete(){
-    this.expenseService.delete(this.id);
+  delete(service){
+    this[this.service].delete(this.id);
   }
 
 }

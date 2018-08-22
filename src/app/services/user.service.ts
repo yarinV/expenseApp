@@ -31,16 +31,13 @@ export class UserService {
       this.userRef = this.db.collection('users');
   }
 
-  getUser(cb){
+  getUser(){
     // Get auth data, then get firestore user document || null
     this.user = this.afAuth.authState.pipe(
      switchMap(user => {
        if (user) {
          // Get user data
          this.setData(user);
-         if(typeof cb == "function"){
-           cb();
-         }
          return this.db.doc(`users/${user.uid}`).valueChanges();
        } else {
          return of(null)
@@ -70,7 +67,8 @@ export class UserService {
   updateVehicleSelected(id, name){
     this.userData.vehicle_name = name;
     let user = this.db.doc(`users/${this.userData.uid}`);
-    user.update({'vehicleSelected':id});
+    return user.update({'vehicleSelected':id});
+
   }
 
   getVehicleSelected(showError?){
