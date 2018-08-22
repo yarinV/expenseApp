@@ -1,4 +1,6 @@
-<ul>
-  <li *ngFor="let vehicle of vehicles">{{vehicle.name}}</li>
-  <delete-button service="vehicleService" [id]="vehicle.id">Delete</delete-button>
-</ul>
+<div class="vehicles">
+  <div *ngFor="let vehicle of vehicles" class="vehicle">
+    <p>{{vehicle.name}}</p>
+    <delete-button deleteFrom="vehicleService" [id]="vehicle.id">Delete</delete-button>
+  </div>
+</div>

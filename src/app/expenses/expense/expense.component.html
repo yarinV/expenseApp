@@ -4,5 +4,5 @@
   <li>{{doc.odometer | number}} {{speed_unit}}</li>
   <li>{{doc.date | date }}</li>
   <view-button [id]='doc.id'></view-button>
-  <delete-button service="expenseService" [id]='doc.id'></delete-button>
+  <delete-button deleteFrom="expenseService" [id]='doc.id'></delete-button>
 </ul>

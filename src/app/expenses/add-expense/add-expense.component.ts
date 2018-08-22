@@ -36,7 +36,7 @@ export class addExpenseComponent implements OnInit {
       this.id = UUID.UUID();
     }
 
-    this.expenseService.addOrUpdate(this.doc, this.id, ()=>{
+    this.expenseService.update({document: this.doc, id: this.id}, ()=>{
       // clear the data if not show individual expense
       if(this.route.snapshot.paramMap.get('id') !== undefined){
         this.clearData();

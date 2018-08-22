@@ -1,5 +1,7 @@
-<select class="vehicle" (change)="handleSelect($event.target.value)">
+<div class="vehicles-list">
+  <select class="vehicles-select" (change)="handleSelect($event.target.value)">
     <option *ngFor="let vehicle of vehicles" value='{{vehicle.id}},{{vehicle.name}}' [selected]="match(vehicle)">
       {{vehicle.name}}
     </option>
   </select>
+</div>

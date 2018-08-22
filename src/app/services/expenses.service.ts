@@ -25,7 +25,7 @@ export class ExpenseService {
             // Vehicle changed get the expenses
             this.vehiclesService.vehicleSelectedChanged.subscribe(
                 ()=>{
-                    this.getFromFireStore();
+                    this.getAllFromDB();
                     this.errorService.clear();
                 }
             )
@@ -33,7 +33,58 @@ export class ExpenseService {
             this.expenseRef = this.db.collection('expenses');
     }
 
-    getFromFireStore(){
+    get(id?){
+        if(id !== undefined){
+            // get one document
+            if(this.expenses === undefined){
+                this.getOneFromDB(id);
+            } else {
+                let doc = this.expenses.filter( item => id === +item.id);
+                doc.length > 0 ? this.documentFetched.emit(doc) : this.getOneFromDB(id);
+            }
+        } else {
+            // get all documents
+            if(this.expenses === undefined){
+                this.getAllFromDB();
+            } else {
+                this.expenses.length > 0 ? this.expensesChanged.emit(this.expenses) : this.getAllFromDB();
+            }
+        }
+    }
+
+    update(data, cb){
+        this.updateDB(data.expense, data.id, cb);
+    }
+
+    delete(id){
+        this.expenseRef.ref.doc(id).delete()
+        .then(()=>{
+            console.log("Document successfully deleted!")
+        }).catch((error)=>{
+            console.error("Error removing document: ", error);
+        })
+    }
+
+    getOneFromDB(doc){
+             this.expenseRef.ref.doc(String(doc)).onSnapshot((item)=>{
+     
+                // if not found try to get item from DB 
+                if(item.exists){
+                    // if found resolve with the item
+                    let document = {...item.data(), id: item.id};
+                    // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
+                    this.zone.run(()=>{
+                        this.documentFetched.emit(document);
+                    })
+                }else{
+                    // if not found reject and post error msg
+                    this.errorService.msg("expense_not_found")
+                }
+
+            });
+    }
+
+    getAllFromDB(){
 
         let that = this;
         this.checkVehicleSelected().then((data)=>{
@@ -63,53 +114,7 @@ export class ExpenseService {
        
     }
 
-    getAll(){
-        if(this.expenses !== undefined){
-            this.expensesChanged.emit(this.expenses);
-        } else {
-            this.getFromFireStore();
-        }
-    }
-
-    get(id){
-        // Check if data exist on the service
-        if(this.expenses != undefined){
-            // check if item exist on service
-            let document = this.expenses.filter((item)=>{
-                return id === +item.id;
-            })
-            if(document.length < 0){
-                // if found return item
-                this.documentFetched.emit(document);
-            }else{
-                this.getDocFromFirebase(id);
-            }
-        }else{
-            this.getDocFromFirebase(id);
-        }
-    }
-
-
-    getDocFromFirebase(doc){
-             this.expenseRef.ref.doc(String(doc)).onSnapshot((item)=>{
-     
-                // if not found try to get item from DB 
-                if(item.exists){
-                    // if found resolve with the item
-                    let document = {...item.data(), id: item.id};
-                    // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
-                    this.zone.run(()=>{
-                        this.documentFetched.emit(document);
-                    })
-                }else{
-                    // if not found reject and post error msg
-                    this.errorService.msg("expense_not_found")
-                }
-
-            });
-    }
-
-    addOrUpdate(expense, id, cb){
+    updateDB(expense, id, cb){
         
         this.checkVehicleSelected(true).then((data)=>{
             let vehicleSelected = data;
@@ -134,15 +139,6 @@ export class ExpenseService {
         });
     }
 
-    delete(id){
-        this.expenseRef.ref.doc(id).delete()
-        .then(()=>{
-            console.log("Document successfully deleted!")
-        }).catch((error)=>{
-            console.error("Error removing document: ", error);
-        })
-    }
-    
     async checkVehicleSelected(showError?){
         let vehicleSelected:string = this.userService.userData.vehicleSelected;
         if(vehicleSelected != undefined){

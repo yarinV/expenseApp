@@ -24,56 +24,42 @@ export class VehiclesService {
     ){
         this.vehiclesRef = this.db.collection('vehicles');
     }
-
-    getAll(uid){
-        if(this.vehicles.length > 0){
-            this.vehiclesChanged.emit(this.vehicles);
-        } else {
-            this.getFromFireStore(uid);
-        }
-    }
-
-    get(id){
-        // Check if data exist on the service
-        if(this.vehicles != undefined){
-            // check if item exist on service
-            let document = this.vehicles.filter((item)=>{
-                return id === +item.id;
-            })
-            if(document.length < 0){
-                // if found return item
-                this.documentFetched.emit(document);
+    get(data){
+        if(data.id !== undefined){
+            // Check if data exist on the service
+            if(this.vehicles === undefined){
+                this.getOneFromDB(data.id);
             }else{
-                this.getDocFromFirebase(id);
+                // check if item exist on service
+                let document = this.vehicles.filter(item=>data.id === +item.id);
+                document.length > 0 ? this.documentFetched.emit(document) : this.getOneFromDB(data.id);
             }
-        }else{
-            this.getDocFromFirebase(id);
+        } else {
+            if(this.vehicles.length === 0){
+                if(!data.uid){
+                    this.errorService.msg('user_no_id');
+                    return false;
+                }
+                this.getAllFromDB(data.uid);
+            } else {
+                this.vehiclesChanged.emit(this.vehicles);
+            }
         }
     }
 
-    getFromFireStore(uid){
-        if(!uid){
+    update(vehicle,id){
+        if(id === undefined){
+            this.errorService.msg("vehicle_no_id");
             return false;
         }
-
-        let that = this;
-
-        this.vehiclesRef.ref.where('uid', '==', uid).onSnapshot((list)=>{
-            that.vehicles = [];
-            list.forEach((item)=>{
-                that.vehicles.push({...item.data(),id:item.id});
-            });
-            if(that.vehicles.length <= 0){
-                this.errorService.msg("no_vehicles");
-            }
-            // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
-            that.zone.run(()=>{
-                that.vehiclesChanged.emit(that.vehicles);
-            });
-        });
+        this.updateDB(vehicle,id);
+    }
+    
+    delete(id){
+        this.deleteFromDB(id);
     }
 
-    getDocFromFirebase(doc){
+    private getOneFromDB(doc){
         this.vehiclesRef.ref.doc(String(doc)).onSnapshot((item)=>{
  
             // if not found try to get item from DB 
@@ -92,16 +78,36 @@ export class VehiclesService {
         });
     }
 
-    addOrUpdate(vehicle,id){
-        if(id === undefined){
-            this.errorService.msg("vehicle_no_id");
-            return false;
-        }
+    private getAllFromDB(uid){
+  
+        let that = this;
 
+        this.vehiclesRef.ref.where('uid', '==', uid).onSnapshot((list)=>{
+            that.vehicles = [];
+            list.forEach((item)=>{
+                that.vehicles.push({...item.data(),id:item.id});
+            });
+            if(that.vehicles.length <= 0){
+                this.errorService.msg("no_vehicles");
+            }
+            // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
+            that.zone.run(()=>{
+                that.vehiclesChanged.emit(that.vehicles);
+            });
+        });
+    }
+
+    private updateDB(vehicle,id){
         let timestamp = Math.floor(Date.now() / 1000);
         vehicle.date = timestamp;
         vehicle.id = timestamp;
 
         this.vehiclesRef.doc(String(id)).set(vehicle);
     }
+
+    private deleteFromDB(id){
+        console.log(id);
+    }
+
+
 }

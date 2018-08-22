@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ExpenseService } from '../../services/expenses.service';
+import { VehiclesService } from '../../services/vehicles.service';
 
 @Component({
   selector: 'delete-button',
@@ -7,15 +8,15 @@ import { ExpenseService } from '../../services/expenses.service';
   styleUrls: ['./delete-button.component.css']
 })
 export class DeleteButtonComponent implements OnInit {
-  constructor(private expenseService: ExpenseService) { }
+  constructor(private expenseService: ExpenseService, private vehicleService: VehiclesService) { }
   @Input('id') id;
-  @Input('service') service;
+  @Input('deleteFrom') deleteFrom;
 
   ngOnInit() {
   }
 
-  delete(service){
-    this[this.service].delete(this.id);
+  delete(){
+    this[this.deleteFrom].delete(this.id);
   }
 
 }

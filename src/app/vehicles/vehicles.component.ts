@@ -21,15 +21,11 @@ export class VehiclesComponent implements OnInit {
           that.vehicles = data;
         }
       )
-    this.getAll();
-  }
-
-  getAll(){
-    this.vehiclesService.getAll(this.userService.userData.uid);
+    this.get();
   }
 
   get(){
-
+    this.vehiclesService.get({ uid : this.userService.userData.uid });
   }
 
   update(){
