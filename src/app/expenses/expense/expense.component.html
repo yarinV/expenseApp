@@ -3,6 +3,6 @@
   <li>{{doc.sum | currency:'USD':true}}</li>
   <li>{{doc.odometer | number}} {{speed_unit}}</li>
   <li>{{doc.date | date }}</li>
-  <view-button [id]='doc.id'></view-button>
+  <view-button [id]='doc.id' [link]="'/expense-edit/' + doc.id"></view-button>
   <delete-button deleteFrom="expenseService" [id]='doc.id'></delete-button>
 </ul>

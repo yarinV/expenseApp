@@ -32,10 +32,6 @@ export class VehiclesComponent implements OnInit {
 
   }
 
-  delete(){
-    
-  }
-  
   handleSelect(event){
     let id = event.split(',')[0];
     let name = event.split(',')[1];

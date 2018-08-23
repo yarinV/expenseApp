@@ -9,7 +9,7 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AppComponent } from './app.component';
 import { VehiclesComponent } from './vehicles/vehicles.component';
 import { ExpensesComponent } from './expenses/expenses.component';
-import { addExpenseComponent } from './expenses/add-expense/add-expense.component';
+import { updateExpenseComponent } from './expenses/update-expense/update-expense.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HeaderComponent } from './header/header.component';
@@ -22,13 +22,15 @@ import { AuthService } from './services/auth.service';
 import { DeleteButtonComponent } from './components/delete-button/delete-button.component';
 import { ViewButtonComponent } from './components/view-button/view-button.component';
 import { VehiclesListComponent } from './vehicles/vehicles-list/vehicles-list.component';
+import { VehicleComponent } from './vehicles/vehicle/vehicle.component';
+import { UpdateVehicleComponent } from './vehicles/update-vehicle/update-vehicle.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     VehiclesComponent,
     ExpensesComponent,
-    addExpenseComponent,
+    updateExpenseComponent,
     DashboardComponent,
     HeaderComponent,
     ExpenseComponent,
@@ -36,6 +38,8 @@ import { VehiclesListComponent } from './vehicles/vehicles-list/vehicles-list.co
     DeleteButtonComponent,
     ViewButtonComponent,
     VehiclesListComponent,
+    VehicleComponent,
+    UpdateVehicleComponent,
   ],
   imports: [
     BrowserModule,

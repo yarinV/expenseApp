@@ -14,7 +14,7 @@ export class ExpenseService {
     expenseRef;
 
     expensesChanged = new EventEmitter<Expense[]>();
-    documentFetched = new EventEmitter<any>();
+    expenseDocFetched = new EventEmitter<any>();
 
     constructor(
         private db: AngularFirestore,
@@ -40,7 +40,7 @@ export class ExpenseService {
                 this.getOneFromDB(id);
             } else {
                 let doc = this.expenses.filter( item => id === +item.id);
-                doc.length > 0 ? this.documentFetched.emit(doc) : this.getOneFromDB(id);
+                doc.length > 0 ? this.expenseDocFetched.emit(doc) : this.getOneFromDB(id);
             }
         } else {
             // get all documents
@@ -52,21 +52,19 @@ export class ExpenseService {
         }
     }
 
-    update(data, cb){
-        this.updateDB(data.expense, data.id, cb);
+    update(expense, cb){
+        this.updateDB(expense, cb);
     }
 
     delete(id){
-        this.expenseRef.ref.doc(id).delete()
-        .then(()=>{
-            console.log("Document successfully deleted!")
-        }).catch((error)=>{
-            console.error("Error removing document: ", error);
-        })
+        if(id !== undefined){
+            this.deleteFromDB(id);
+            return;
+        }
     }
 
-    getOneFromDB(doc){
-             this.expenseRef.ref.doc(String(doc)).onSnapshot((item)=>{
+    getOneFromDB(id){
+             this.expenseRef.ref.doc(String(id)).onSnapshot((item)=>{
      
                 // if not found try to get item from DB 
                 if(item.exists){
@@ -74,7 +72,7 @@ export class ExpenseService {
                     let document = {...item.data(), id: item.id};
                     // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
                     this.zone.run(()=>{
-                        this.documentFetched.emit(document);
+                        this.expenseDocFetched.emit(document);
                     })
                 }else{
                     // if not found reject and post error msg
@@ -114,17 +112,17 @@ export class ExpenseService {
        
     }
 
-    updateDB(expense, id, cb){
+    updateDB(expense, cb){
         
-        this.checkVehicleSelected(true).then((data)=>{
-            let vehicleSelected = data;
+        this.checkVehicleSelected(true).then((results)=>{
+            let vehicleSelected = results;
             let timestamp = Math.floor(Date.now());
         
             if(vehicleSelected == '' && expense.vehicleId === undefined){
                 return false;
             }
 
-            if(id === undefined){
+            if(expense.id === undefined){
                 this.errorService.msg("expense_no_id");
                 return false;
             }
@@ -132,10 +130,19 @@ export class ExpenseService {
             expense.date = expense.date || timestamp;
             expense.vehicleId = vehicleSelected;
             
-            this.expenseRef.doc(String(id)).set(expense);
+            this.expenseRef.doc(String(expense.id)).set(expense);
             if(typeof cb == "function"){
                 cb();
             }
+        });
+    }
+
+    deleteFromDB(id){
+        this.expenseRef.ref.doc(id).delete()
+        .then(()=>{
+            console.log("Document successfully deleted!")
+        }).catch((error)=>{
+            console.error("Error removing document: ", error);
         });
     }
 

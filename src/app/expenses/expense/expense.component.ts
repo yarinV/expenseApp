@@ -29,7 +29,7 @@ export class ExpenseComponent implements OnInit {
 
   get(id){
     this.expenseService.get(id);
-    this.expenseService.documentFetched.subscribe((document)=>{
+    this.expenseService.expenseDocFetched.subscribe((document)=>{
       this.doc = document;
     });
   }

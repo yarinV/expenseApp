@@ -15,7 +15,7 @@ export class VehiclesService {
     vehicleSelectedChanged = new EventEmitter();
     vehi
     vehiclesChanged = new EventEmitter();
-    documentFetched = new EventEmitter<any>();
+    vehicleDocFetched = new EventEmitter<any>();
         
     constructor(
      private db: AngularFirestore,
@@ -27,12 +27,12 @@ export class VehiclesService {
     get(data){
         if(data.id !== undefined){
             // Check if data exist on the service
-            if(this.vehicles === undefined){
+            if(this.vehicles.length === 0){
                 this.getOneFromDB(data.id);
             }else{
                 // check if item exist on service
                 let document = this.vehicles.filter(item=>data.id === +item.id);
-                document.length > 0 ? this.documentFetched.emit(document) : this.getOneFromDB(data.id);
+                document.length > 0 ? this.vehicleDocFetched.emit(document) : this.getOneFromDB(data.id);
             }
         } else {
             if(this.vehicles.length === 0){
@@ -52,15 +52,18 @@ export class VehiclesService {
             this.errorService.msg("vehicle_no_id");
             return false;
         }
-        this.updateDB(vehicle,id);
+        this.updateDB(vehicle);
     }
     
     delete(id){
-        this.deleteFromDB(id);
+        if(id !== undefined){
+            this.deleteFromDB(id);
+            return;
+        }
     }
 
-    private getOneFromDB(doc){
-        this.vehiclesRef.ref.doc(String(doc)).onSnapshot((item)=>{
+    private getOneFromDB(id){
+        this.vehiclesRef.ref.doc(String(id)).onSnapshot((item)=>{
  
             // if not found try to get item from DB 
             if(item.exists){
@@ -68,7 +71,7 @@ export class VehiclesService {
                 let document = {...item.data(), id: item.id};
                  // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
                 this.zone.run(()=>{
-                    this.documentFetched.emit(document);
+                    this.vehicleDocFetched.emit(document);
                 });
             }else{
                 // if not found reject and post error msg
@@ -97,16 +100,20 @@ export class VehiclesService {
         });
     }
 
-    private updateDB(vehicle,id){
+    private updateDB(vehicle){
         let timestamp = Math.floor(Date.now() / 1000);
         vehicle.date = timestamp;
-        vehicle.id = timestamp;
 
-        this.vehiclesRef.doc(String(id)).set(vehicle);
+        this.vehiclesRef.doc(String(vehicle.id)).set(vehicle);
     }
 
     private deleteFromDB(id){
-        console.log(id);
+        this.vehiclesRef.ref.doc(id).delete()
+        .then(()=>{
+            console.log("Document successfully deleted!")
+        }).catch((error)=>{
+            console.error("Error removing document: ", error);
+        });
     }
 
 

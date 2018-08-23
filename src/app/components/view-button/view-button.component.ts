@@ -7,6 +7,8 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ViewButtonComponent implements OnInit {
   @Input('id') id;
+  @Input('link') link;
+
   constructor() { }
 
   ngOnInit() {
