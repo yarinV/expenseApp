@@ -23,7 +23,7 @@
     </div>
 
     <delete-button *ngIf="doc.id" deleteFrom="expenseService" [id]='doc.id'></delete-button>
-    <div class="app-circle-button submit" (click)="submitForm()"><i class="fa fa-check-circle"></i></div>
+    <submit-botton (click)="submitForm()"></submit-botton>
 
   </div>
 </form>

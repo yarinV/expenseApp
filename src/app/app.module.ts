@@ -24,6 +24,7 @@ import { ViewButtonComponent } from './components/view-button/view-button.compon
 import { VehiclesListComponent } from './vehicles/vehicles-list/vehicles-list.component';
 import { VehicleComponent } from './vehicles/vehicle/vehicle.component';
 import { UpdateVehicleComponent } from './vehicles/update-vehicle/update-vehicle.component';
+import { SubmitBottonComponent } from './components/submit-botton/submit-botton.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { UpdateVehicleComponent } from './vehicles/update-vehicle/update-vehicle
     VehiclesListComponent,
     VehicleComponent,
     UpdateVehicleComponent,
+    SubmitBottonComponent,
   ],
   imports: [
     BrowserModule,
