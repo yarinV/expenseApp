@@ -1,3 +1,4 @@
-<p>{{doc.name}}</p>
-<delete-button deleteFrom="vehicleService" [id]="doc.id">Delete</delete-button>
-<view-button [id]='doc.id' [link]="'/vehicle-edit/' + doc.id"></view-button>
+<a *ngIf="doc" class="link" routerLink="/vehicle-edit/{{doc.id}}">
+    <p>{{doc.name}}</p>
+    <delete-button deleteFrom="vehicleService" [id]="doc.id">Delete</delete-button>
+</a>

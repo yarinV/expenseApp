@@ -20,7 +20,6 @@ import { AuthGuard } from './helpers/auth.guard';
 import { UserService } from './services/user.service';
 import { AuthService } from './services/auth.service';
 import { DeleteButtonComponent } from './components/delete-button/delete-button.component';
-import { ViewButtonComponent } from './components/view-button/view-button.component';
 import { VehiclesListComponent } from './vehicles/vehicles-list/vehicles-list.component';
 import { VehicleComponent } from './vehicles/vehicle/vehicle.component';
 import { UpdateVehicleComponent } from './vehicles/update-vehicle/update-vehicle.component';
@@ -37,7 +36,6 @@ import { SubmitBottonComponent } from './components/submit-botton/submit-botton.
     ExpenseComponent,
     ErrorsComponent,
     DeleteButtonComponent,
-    ViewButtonComponent,
     VehiclesListComponent,
     VehicleComponent,
     UpdateVehicleComponent,
