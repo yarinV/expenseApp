@@ -2,6 +2,7 @@ import { Injectable, EventEmitter, NgZone } from "@angular/core";
 import { AngularFirestore } from "angularfire2/firestore";
 
 import { ErrorService } from "./error.service";
+import { UserService } from "./user.service";
 
 @Injectable({
     providedIn: 'root'
@@ -47,12 +48,8 @@ export class VehiclesService {
         }
     }
 
-    update(vehicle,id){
-        if(id === undefined){
-            this.errorService.msg("vehicle_no_id");
-            return false;
-        }
-        this.updateDB(vehicle);
+    update(vehicle,cb){
+        this.updateDB(vehicle,cb);
     }
     
     delete(id){
@@ -100,11 +97,14 @@ export class VehiclesService {
         });
     }
 
-    private updateDB(vehicle){
+    private updateDB(vehicle, cb){
         let timestamp = Math.floor(Date.now() / 1000);
         vehicle.date = timestamp;
-
         this.vehiclesRef.doc(String(vehicle.id)).set(vehicle);
+        // TODO: after update run cb
+        if(typeof cb == "function"){
+            cb();
+        }
     }
 
     private deleteFromDB(id){

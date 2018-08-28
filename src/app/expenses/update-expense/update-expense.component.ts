@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -13,7 +14,9 @@ import { UUID } from 'angular2-uuid';
 export class updateExpenseComponent implements OnInit {
   doc;
 
-  constructor(private expenseService: ExpenseService, private route:ActivatedRoute) {
+  constructor(private expenseService: ExpenseService,
+    private route:ActivatedRoute,
+    private location: Location) {
     this.clearData();
   }
 
@@ -37,6 +40,7 @@ export class updateExpenseComponent implements OnInit {
       // clear the data if not show individual expense
       if(this.route.snapshot.paramMap.get('id') !== undefined){
         this.clearData();
+        this.location.back();
       }
     });
   }

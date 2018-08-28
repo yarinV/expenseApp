@@ -131,6 +131,7 @@ export class ExpenseService {
             expense.vehicleId = vehicleSelected;
             
             this.expenseRef.doc(String(expense.id)).set(expense);
+            // TODO: after update run cb
             if(typeof cb == "function"){
                 cb();
             }
