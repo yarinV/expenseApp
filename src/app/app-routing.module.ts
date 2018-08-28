@@ -15,6 +15,7 @@ const appRoutes: Routes = [
     { path: 'vehicles', component: VehiclesComponent,  canActivate: [AuthGuard] },
     { path: 'vehicle-edit/:id', component: UpdateVehicleComponent,  canActivate: [AuthGuard] },
     { path: 'expenses', component: ExpensesComponent,  canActivate: [AuthGuard] },
+    { path: 'expense-edit', component: updateExpenseComponent,  canActivate: [AuthGuard] },
     { path: 'expense-edit/:id', component: updateExpenseComponent,  canActivate: [AuthGuard] },
     // { path: 'not-found', component: PageNotFoundComponent},
     // { path: '**', redirectTo: '/not-found', pathMatch: 'full'}

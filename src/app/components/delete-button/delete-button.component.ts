@@ -5,7 +5,7 @@ import { VehiclesService } from '../../services/vehicles.service';
 @Component({
   selector: 'delete-button',
   templateUrl: './delete-button.component.html',
-  styleUrls: ['./delete-button.component.css']
+  styleUrls: ['./delete-button.component.scss']
 })
 export class DeleteButtonComponent implements OnInit {
   constructor(private expenseService: ExpenseService, private vehicleService: VehiclesService) { }

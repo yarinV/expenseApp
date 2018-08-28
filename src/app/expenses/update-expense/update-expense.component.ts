@@ -8,7 +8,7 @@ import { UUID } from 'angular2-uuid';
 @Component({
   selector: 'app-update-expense',
   templateUrl: './update-expense.component.html',
-  styleUrls: ['./update-expense.component.css']
+  styleUrls: ['./update-expense.component.scss']
 })
 export class updateExpenseComponent implements OnInit {
   doc;

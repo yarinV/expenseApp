@@ -1,14 +1,10 @@
 <nav class="navbar navbar-light light-blue lighten-4">
+    <button class="navbar-toggler toggler-example" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1"><span class="dark-teal-text"><i class="fa fa-bars fa-1x"></i></span></button>
 
     <a class="navbar-brand" routerLink="/">Expenses App</a>
 
-    <div *ngIf="userService.userData">
-        <vehicles-list></vehicles-list>
-    </div>
-    
-    <button class="navbar-toggler toggler-example" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1"><span class="dark-teal-text"><i class="fa fa-bars fa-1x"></i></span></button>
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+
         <ul class="navbar-nav mr-auto">
             <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show"><a class="nav-link" routerLink="/" routerLinkActive="active">Home</a></li>
             <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show"><a class="nav-link" routerLink="/vehicles/" routerLinkActive="active">Vehicle</a></li>
@@ -16,6 +12,9 @@
             <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show"><button (click)="auth.signOut()">Logout</button></li>
         </ul>
 
+        <div class="m-t-1" *ngIf="userService.userData">
+            <vehicles-list></vehicles-list>
+        </div>
     </div>
 
 </nav>

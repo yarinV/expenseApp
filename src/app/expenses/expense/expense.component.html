@@ -1,8 +1,10 @@
-<ul *ngIf="doc">
-  <li>{{doc.name}}</li>
-  <li>{{doc.sum | currency:'USD':true}}</li>
-  <li>{{doc.odometer | number}} {{speed_unit}}</li>
-  <li>{{doc.date | date }}</li>
-  <view-button [id]='doc.id' [link]="'/expense-edit/' + doc.id"></view-button>
-  <delete-button deleteFrom="expenseService" [id]='doc.id'></delete-button>
-</ul>
+<a *ngIf="doc" class="link" routerLink="/expense-edit/{{doc.id}}">
+  <ul class="doc">
+    <li class="name">{{doc.name}}</li>
+    <li>Cost: {{doc.sum | currency:'USD':true}}</li>
+    <li>Odomter: {{doc.odometer | number}} {{speed_unit}}</li>
+    <li>{{doc.date | date }}</li>
+    <!-- <view-button [id]='doc.id' [link]="'/expense-edit/' + doc.id"></view-button>
+    <delete-button deleteFrom="expenseService" [id]='doc.id'></delete-button> -->
+  </ul>
+</a>

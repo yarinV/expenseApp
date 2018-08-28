@@ -1,8 +1,5 @@
-<h2>My Expenses</h2>
 <div class="expenses-list">
-    <hr>
-  <div *ngFor="let expense of expenses" class="expense-list">
+  <div *ngFor="let expense of expenses" class="expense-item">
     <app-expense [document]="expense"></app-expense>
-    <hr>
   </div>
 </div>
