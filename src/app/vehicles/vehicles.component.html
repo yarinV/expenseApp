@@ -1,6 +1,6 @@
 <div class="vehicles">
   <div *ngFor="let vehicle of vehicles" class="vehicle">
-    <vehicle [doc]="vehicle"></vehicle>
+    <app-vehicle [doc]="vehicle"></app-vehicle>
   </div>
-  <app-update-vehicle></app-update-vehicle>
+  <add-button link="/vehicle-edit/"></add-button>
 </div>

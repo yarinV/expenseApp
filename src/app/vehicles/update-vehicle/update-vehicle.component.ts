@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-update-vehicle',
   templateUrl: './update-vehicle.component.html',
-  styleUrls: ['./update-vehicle.component.css']
+  styleUrls: ['./update-vehicle.component.scss']
 })
 export class UpdateVehicleComponent implements OnInit {
   doc;

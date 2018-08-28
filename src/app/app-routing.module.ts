@@ -13,6 +13,7 @@ const appRoutes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent},
     { path: 'vehicles', component: VehiclesComponent,  canActivate: [AuthGuard] },
+    { path: 'vehicle-edit', component: UpdateVehicleComponent,  canActivate: [AuthGuard] },
     { path: 'vehicle-edit/:id', component: UpdateVehicleComponent,  canActivate: [AuthGuard] },
     { path: 'expenses', component: ExpensesComponent,  canActivate: [AuthGuard] },
     { path: 'expense-edit', component: updateExpenseComponent,  canActivate: [AuthGuard] },

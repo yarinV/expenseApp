@@ -1,4 +1,7 @@
 <a *ngIf="doc" class="link" routerLink="/vehicle-edit/{{doc.id}}">
-    <p>{{doc.name}}</p>
-    <delete-button deleteFrom="vehicleService" [id]="doc.id">Delete</delete-button>
+    <img *ngIf="doc.img" src="doc.img" alt="doc.name">
+    <ul class="doc">
+        <li class="name">{{doc.name}}</li>
+        <li>Total: $9999</li>
+    </ul>
 </a>

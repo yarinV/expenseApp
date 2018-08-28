@@ -1,12 +1,7 @@
 <div *ngIf="userService.user | async; then authenticated else guest"></div>
 <ng-template #authenticated>
     <h2>Dashboard</h2>
-    <app-expenses></app-expenses>
-    <!-- <app-update-expense></app-update-expense> -->
-    <div routerLink="/expense-edit/">
-        <i class="app-circle-button add-button fa fa-plus-circle"></i>
-    </div>
-
+    <app-expenses></app-expenses>   
 </ng-template>
 
 <ng-template #guest>

@@ -23,7 +23,8 @@ import { DeleteButtonComponent } from './components/delete-button/delete-button.
 import { VehiclesListComponent } from './vehicles/vehicles-list/vehicles-list.component';
 import { VehicleComponent } from './vehicles/vehicle/vehicle.component';
 import { UpdateVehicleComponent } from './vehicles/update-vehicle/update-vehicle.component';
-import { SubmitBottonComponent } from './components/submit-botton/submit-botton.component';
+import { SubmitButtonComponent } from './components/submit-button/submit-button.component';
+import { AddButtonComponent } from './components/add-button/add-button.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { SubmitBottonComponent } from './components/submit-botton/submit-botton.
     VehiclesListComponent,
     VehicleComponent,
     UpdateVehicleComponent,
-    SubmitBottonComponent,
+    SubmitButtonComponent,
+    AddButtonComponent,
   ],
   imports: [
     BrowserModule,
