@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <delete-button *ngIf="doc.id" deleteFrom="expenseService" [id]='doc.id'></delete-button>
+    <delete-button *ngIf="doc.id" (click)="delete(doc.id)"></delete-button>
     <submit-button (click)="submitForm()"></submit-button>
 
   </div>

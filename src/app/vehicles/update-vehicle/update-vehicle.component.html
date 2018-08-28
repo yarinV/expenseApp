@@ -9,7 +9,7 @@
     </div>
 
     
-    <delete-button *ngIf="doc.id" deleteFrom="vehicleService" [id]='doc.id'></delete-button>
+    <delete-button *ngIf="doc.id" (click)="delete(doc.id)"></delete-button>
     <submit-button (click)="submitForm()"></submit-button>
 
   </div>

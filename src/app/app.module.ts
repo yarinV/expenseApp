@@ -9,7 +9,7 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AppComponent } from './app.component';
 import { VehiclesComponent } from './vehicles/vehicles.component';
 import { ExpensesComponent } from './expenses/expenses.component';
-import { updateExpenseComponent } from './expenses/update-expense/update-expense.component';
+import { UpdateExpenseComponent } from './expenses/update-expense/update-expense.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HeaderComponent } from './header/header.component';
@@ -31,7 +31,7 @@ import { AddButtonComponent } from './components/add-button/add-button.component
     AppComponent,
     VehiclesComponent,
     ExpensesComponent,
-    updateExpenseComponent,
+    UpdateExpenseComponent,
     DashboardComponent,
     HeaderComponent,
     ExpenseComponent,

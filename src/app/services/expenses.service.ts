@@ -56,9 +56,9 @@ export class ExpenseService {
         this.updateDB(expense, cb);
     }
 
-    delete(id){
+    delete(id, cb){
         if(id !== undefined){
-            this.deleteFromDB(id);
+            this.deleteFromDB(id, cb);
             return;
         }
     }
@@ -99,7 +99,10 @@ export class ExpenseService {
                 });
                 if(that.expenses.length <= 0){
                     this.errorService.msg("no_expenses");
-                } 
+                    return false;
+                }else{
+                    this.errorService.clear();
+                }
                 // return empty or list with data
                 // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
                 that.zone.run(()=>{
@@ -125,6 +128,8 @@ export class ExpenseService {
             if(expense.id === undefined){
                 this.errorService.msg("expense_no_id");
                 return false;
+            }else{
+                this.errorService.clear();
             }
 
             expense.date = expense.date || timestamp;
@@ -138,10 +143,13 @@ export class ExpenseService {
         });
     }
 
-    deleteFromDB(id){
+    deleteFromDB(id, cb){
         this.expenseRef.ref.doc(id).delete()
         .then(()=>{
-            console.log("Document successfully deleted!")
+            console.log("Document successfully deleted!");
+            if(typeof cb == "function"){
+                cb();
+            }
         }).catch((error)=>{
             console.error("Error removing document: ", error);
         });

@@ -52,10 +52,9 @@ export class VehiclesService {
         this.updateDB(vehicle,cb);
     }
     
-    delete(id){
+    delete(id,cb){
         if(id !== undefined){
-            this.deleteFromDB(id);
-            return;
+            this.deleteFromDB(id,cb);
         }
     }
 
@@ -100,17 +99,20 @@ export class VehiclesService {
     private updateDB(vehicle, cb){
         let timestamp = Math.floor(Date.now() / 1000);
         vehicle.date = timestamp;
-        this.vehiclesRef.doc(String(vehicle.id)).set(vehicle);
+        this.vehiclesRef.doc(String(vehicle.id)).set(vehicle, {merge:true});
         // TODO: after update run cb
         if(typeof cb == "function"){
             cb();
         }
     }
 
-    private deleteFromDB(id){
+    private deleteFromDB(id,cb){
         this.vehiclesRef.ref.doc(id).delete()
         .then(()=>{
-            console.log("Document successfully deleted!")
+            console.log("Document successfully deleted!");
+            if(typeof cb == "function"){
+                cb();
+            }
         }).catch((error)=>{
             console.error("Error removing document: ", error);
         });

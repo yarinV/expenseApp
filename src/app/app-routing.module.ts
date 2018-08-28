@@ -5,7 +5,7 @@ import { VehiclesComponent } from "./vehicles/vehicles.component";
 import { ExpensesComponent } from "./expenses/expenses.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { ExpenseComponent } from "./expenses/expense/expense.component";
-import { updateExpenseComponent } from "./expenses/update-expense/update-expense.component";
+import { UpdateExpenseComponent } from "./expenses/update-expense/update-expense.component";
 import { AuthGuard } from "./helpers/auth.guard";
 import { UpdateVehicleComponent } from "./vehicles/update-vehicle/update-vehicle.component";
 
@@ -16,8 +16,8 @@ const appRoutes: Routes = [
     { path: 'vehicle-edit', component: UpdateVehicleComponent,  canActivate: [AuthGuard] },
     { path: 'vehicle-edit/:id', component: UpdateVehicleComponent,  canActivate: [AuthGuard] },
     { path: 'expenses', component: ExpensesComponent,  canActivate: [AuthGuard] },
-    { path: 'expense-edit', component: updateExpenseComponent,  canActivate: [AuthGuard] },
-    { path: 'expense-edit/:id', component: updateExpenseComponent,  canActivate: [AuthGuard] },
+    { path: 'expense-edit', component: UpdateExpenseComponent,  canActivate: [AuthGuard] },
+    { path: 'expense-edit/:id', component: UpdateExpenseComponent,  canActivate: [AuthGuard] },
     // { path: 'not-found', component: PageNotFoundComponent},
     // { path: '**', redirectTo: '/not-found', pathMatch: 'full'}
   ];

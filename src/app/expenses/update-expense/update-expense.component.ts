@@ -11,7 +11,7 @@ import { UUID } from 'angular2-uuid';
   templateUrl: './update-expense.component.html',
   styleUrls: ['./update-expense.component.scss']
 })
-export class updateExpenseComponent implements OnInit {
+export class UpdateExpenseComponent implements OnInit {
   doc;
 
   constructor(private expenseService: ExpenseService,
@@ -42,6 +42,13 @@ export class updateExpenseComponent implements OnInit {
         this.clearData();
         this.location.back();
       }
+    });
+  }
+
+  delete(id){
+    // Delete and go back
+    this.expenseService.delete(id,()=>{
+      this.location.back();
     });
   }
   

@@ -51,6 +51,13 @@ export class UpdateVehicleComponent implements OnInit {
       }
     });
   }
+
+  delete(id){
+    // Delete and go back
+    this.vehicleService.delete(id,()=>{
+      this.location.back();
+    });
+  }
   
   clearData(){
     this.doc = {
