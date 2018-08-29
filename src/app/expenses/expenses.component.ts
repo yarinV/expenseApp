@@ -19,9 +19,18 @@ export class ExpensesComponent implements OnInit {
   }
   
   ngOnInit() {
-    // get expenses but dont show errors
-    this.expenseService.get().then((data)=>{this.expenses = data});
+    this.get();
+    // when selectedVehicle changed get new expenses
+    this.expenseService.expensesChanged.subscribe(()=>{
+      this.get();
+    })
   }
 
+  get(){
+    // get expenses but dont show errors
+    this.expenseService.get().then((data)=>{
+      this.expenses = data
+    });
+  }
 
 }

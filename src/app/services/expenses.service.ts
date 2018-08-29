@@ -13,7 +13,7 @@ export class ExpenseService {
     expenses;
     expenseRef;
 
-    expensesChanged = new EventEmitter<Expense[]>();
+    expensesChanged = new EventEmitter();
     expenseDocFetched = new EventEmitter<any>();
 
     constructor(
@@ -25,7 +25,9 @@ export class ExpenseService {
             // Vehicle changed get the expenses
             this.vehiclesService.vehicleSelectedChanged.subscribe(
                 ()=>{
-                    this.getAllFromDbAsync({updateLocal:true});
+                    this.getAllFromDbAsync({updateLocal:true}, ()=>{
+                        this.expensesChanged.emit()
+                    });
                     this.errorService.clear();
                 }
             )
@@ -125,7 +127,7 @@ export class ExpenseService {
        
     // }
 
-    async getAllFromDbAsync(data){
+    async getAllFromDbAsync(data, cb?){
         if(!data.vehicle){
             let temp;
             await this.checkVehicleSelected().then((item)=>{ temp = item;})
@@ -145,6 +147,9 @@ export class ExpenseService {
             // return empty or list with data
             if(data.updateLocal){
                 this.expenses = expenses;
+            }
+            if(typeof cb === "function"){
+                cb();
             }
             return expenses;
         });
