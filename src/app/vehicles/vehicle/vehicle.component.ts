@@ -6,7 +6,8 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./vehicle.component.scss']
 })
 export class VehicleComponent implements OnInit {
-  @Input('doc') doc; 
+  @Input('doc') doc;
+  @Input('total') total;
   constructor() { }
 
   ngOnInit() {

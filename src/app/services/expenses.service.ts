@@ -64,22 +64,37 @@ export class ExpenseService {
     }
 
     getOneFromDB(id){
-             this.expenseRef.ref.doc(String(id)).onSnapshot((item)=>{
-     
-                // if not found try to get item from DB 
-                if(item.exists){
-                    // if found resolve with the item
-                    let document = {...item.data(), id: item.id};
-                    // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
-                    this.zone.run(()=>{
-                        this.expenseDocFetched.emit(document);
-                    })
-                }else{
-                    // if not found reject and post error msg
-                    this.errorService.msg("expense_not_found")
-                }
+        this.expenseRef.ref.doc(String(id)).onSnapshot((item)=>{
+    
+            // if not found try to get item from DB 
+            if(item.exists){
+                // if found resolve with the item
+                let document = {...item.data(), id: item.id};
+                // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
+                this.zone.run(()=>{
+                    this.expenseDocFetched.emit(document);
+                })
+            }else{
+                // if not found reject and post error msg
+                this.errorService.msg("expense_not_found")
+            }
 
-            });
+        });
+    }
+
+    async getOneFromDBAsync(id){
+        return this.expenseRef.ref.doc(String(id)).onSnapshot((item)=>{
+            // if not found try to get item from DB 
+            if(item.exists){
+                // if found resolve with the item
+                let document = {...item.data(), id: item.id};
+                return this.expenseDocFetched.emit(document);
+            }else{
+                // if not found reject and post error msg
+                this.errorService.msg("expense_not_found");
+                return {};
+            }
+        });
     }
 
     getAllFromDB(){
@@ -113,6 +128,22 @@ export class ExpenseService {
 
         });
        
+    }
+
+    getAllFromDbDontUpdateLocal(vehicleSelected){
+            return this.expenseRef.ref.where('vehicleId', '==', vehicleSelected).get().then((list)=>{
+                let expenses = [];
+                list.forEach((item)=>{
+                    expenses.push({...item.data(),id:item.id});
+                });
+                if(expenses.length <= 0){
+                    this.errorService.msg("no_expenses");
+                }else{
+                    this.errorService.clear();
+                }
+                // return empty or list with data
+                return expenses;
+            });
     }
 
     updateDB(expense, cb){
@@ -171,4 +202,17 @@ export class ExpenseService {
         }
     }
 
+    async calculateTotal(vehicles){
+        let total = [];
+        for (let i = 0; i < vehicles.length; i++) {
+            const item = vehicles[i];
+            await this.getAllFromDbDontUpdateLocal(item.id).then((expenses)=>{
+                total[item.id] = 0;
+                expenses.forEach((expense)=>{
+                    total[item.id] += +expense.sum;
+                });
+            })
+        }
+        return total;
+    }
 }

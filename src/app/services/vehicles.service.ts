@@ -43,7 +43,6 @@ export class VehiclesService {
                     return [];
                 }
                  let docs = await this.getAllFromDB(data.uid);
-                 console.log(docs);
                  return docs;
             } else {
                 return this.vehicles;

@@ -1,6 +1,6 @@
 <div class="vehicles">
   <div *ngFor="let vehicle of vehicles" class="vehicle">
-    <app-vehicle [doc]="vehicle"></app-vehicle>
+    <app-vehicle [doc]="vehicle" [total]="total !== undefiend ? total[vehicle.id] : '' "></app-vehicle>
   </div>
   <add-button link="/vehicle-edit/"></add-button>
 </div>
