@@ -87,8 +87,7 @@ export class VehiclesService {
     }
 
     private updateDB(vehicle, cb){
-        let timestamp = Math.floor(Date.now() / 1000);
-        vehicle.date = timestamp;
+        vehicle.date = vehicle.date || Math.floor(Date.now() / 1000);
         this.vehiclesRef.doc(String(vehicle.id)).set(vehicle, {merge:true}).then(()=>{
             // update local 
             let matched:boolean;

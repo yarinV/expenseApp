@@ -1,7 +1,9 @@
+// TODO: redirect to intro page
 admin panel
 design ui
 add loading animation
 Setting page - currency, units (miles, kilometers)
+hide expenses if no vehicles
 
 // TODO: UPDATE Vehicle & expense services - after update run cb
 // BUG: Error msgs(no expenses) shown when there is expenses

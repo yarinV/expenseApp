@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { UserService } from '../../services/user.service';
 import { VehiclesService } from '../../services/vehicles.service';
 import { VehiclesComponent } from '../vehicles.component';
@@ -11,8 +13,8 @@ import { ExpenseService } from '../../services/expenses.service';
 })
 export class VehiclesListComponent extends VehiclesComponent{
 
-  constructor(public userService: UserService, public vehiclesService: VehiclesService, public expenseService: ExpenseService) {
-    super(vehiclesService, userService, expenseService);
+  constructor(injector:Injector) {
+    super(injector);
    }
 
 }

@@ -80,7 +80,7 @@ export class UserService {
         reject();
       }
 
-      this.userRef.ref.doc(this.userData.uid).onSnapshot((item)=>{
+      this.userRef.ref.doc(this.userData.uid).get().then((item)=>{
           let user = item.data(); 
           if(user.vehicleSelected !== undefined){
             this.userData.vehicleSelected = user.vehicleSelected;

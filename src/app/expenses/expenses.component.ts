@@ -12,28 +12,17 @@ import { ErrorService } from '../services/error.service';
   styleUrls: ['./expenses.component.scss']
 })
 export class ExpensesComponent implements OnInit {
-  expenses:[any];
-  vehicleId: number;
+  expenses;
   speed_unit = environment.speed_unit;
   
   constructor(private expenseService: ExpenseService, private userService: UserService, private errorService: ErrorService) {
   }
   
   ngOnInit() {
-    var that = this;
     
-    // Subscribe for updates
-    this.expenseService.expensesChanged.subscribe(
-      (data)=>{
-        that.expenses = data;
-      }
-    );
-    // get expenses but done show errors
-    this.get();
+    // get expenses but dont show errors
+    this.expenseService.get().then((data)=>{this.expenses = data;});
   }
 
-  get(){
-    this.expenseService.get();
-  }
 
 }

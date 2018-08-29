@@ -25,7 +25,7 @@ export class ExpenseService {
             // Vehicle changed get the expenses
             this.vehiclesService.vehicleSelectedChanged.subscribe(
                 ()=>{
-                    this.getAllFromDB();
+                    this.getAllFromDbAsync({updateLocal:true});
                     this.errorService.clear();
                 }
             )
@@ -33,21 +33,21 @@ export class ExpenseService {
             this.expenseRef = this.db.collection('expenses');
     }
 
-    get(id?){
+    async get(id?){
         if(id !== undefined){
             // get one document
             if(this.expenses === undefined){
-                this.getOneFromDB(id);
+                return this.getOneFromDBAsync(id);
             } else {
                 let doc = this.expenses.filter( item => id === +item.id);
-                doc.length > 0 ? this.expenseDocFetched.emit(doc) : this.getOneFromDB(id);
+                return doc.length > 0 ? doc[0] : this.getOneFromDBAsync(id);
             }
         } else {
             // get all documents
             if(this.expenses === undefined){
-                this.getAllFromDB();
+                return this.getAllFromDbAsync({updateLocal:true});
             } else {
-                this.expenses.length > 0 ? this.expensesChanged.emit(this.expenses) : this.getAllFromDB();
+                return this.expenses.length > 0 ? this.expenses : this.getAllFromDbAsync({updateLocal:true});
             }
         }
     }
@@ -63,24 +63,21 @@ export class ExpenseService {
         }
     }
 
-    getOneFromDB(id){
-        this.expenseRef.ref.doc(String(id)).onSnapshot((item)=>{
+    // getOneFromDB(id){
+    //     return this.expenseRef.ref.doc(String(id)).onSnapshot((item)=>{
     
-            // if not found try to get item from DB 
-            if(item.exists){
-                // if found resolve with the item
-                let document = {...item.data(), id: item.id};
-                // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
-                this.zone.run(()=>{
-                    this.expenseDocFetched.emit(document);
-                })
-            }else{
-                // if not found reject and post error msg
-                this.errorService.msg("expense_not_found")
-            }
+    //         // if not found try to get item from DB 
+    //         if(item.exists){
+    //             // if found resolve with the item
+    //             return {...item.data(), id: item.id};
+    //         }else{
+    //             // if not found reject and post error msg
+    //             this.errorService.msg("expense_not_found");
+    //             return {};
+    //         }
 
-        });
-    }
+    //     });
+    // }
 
     async getOneFromDBAsync(id){
         return this.expenseRef.ref.doc(String(id)).onSnapshot((item)=>{
@@ -97,53 +94,61 @@ export class ExpenseService {
         });
     }
 
-    getAllFromDB(){
+    // getAllFromDB(){
 
-        let that = this;
-        this.checkVehicleSelected().then((data)=>{
-            let vehicleSelected = data;
+    //     this.checkVehicleSelected().then((data)=>{
+    //         let vehicleSelected = data;
         
-            if(vehicleSelected === ''){
-                return false;
-            }
+    //         if(vehicleSelected === ''){
+    //             return false;
+    //         }
             
-            this.expenseRef.ref.where('vehicleId', '==', vehicleSelected).onSnapshot((list)=>{
-                that.expenses = new Array<any>();
-                list.forEach((item)=>{
-                    that.expenses.push({...item.data(),id:item.id});
-                });
-                if(that.expenses.length <= 0){
-                    this.errorService.msg("no_expenses");
-                    return false;
-                }else{
-                    this.errorService.clear();
-                }
-                // return empty or list with data
-                // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
-                that.zone.run(()=>{
-                    that.expensesChanged.emit(that.expenses);
-                });
+    //         this.expenseRef.ref.where('vehicleId', '==', vehicleSelected).onSnapshot((list)=>{
+    //             this.expenses = new Array<any>();
+    //             list.forEach((item)=>{
+    //                 this.expenses.push({...item.data(),id:item.id});
+    //             });
+    //             if(this.expenses.length <= 0){
+    //                 this.errorService.msg("no_expenses");
+    //                 return false;
+    //             }else{
+    //                 this.errorService.clear();
+    //             }
+    //             // return empty or list with data
+    //             // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
+    //             this.zone.run(()=>{
+    //                 this.expensesChanged.emit(this.expenses);
+    //             });
                 
-            });
+    //         });
 
-        });
+    //     });
        
-    }
+    // }
 
-    getAllFromDbDontUpdateLocal(vehicleSelected){
-            return this.expenseRef.ref.where('vehicleId', '==', vehicleSelected).get().then((list)=>{
-                let expenses = [];
-                list.forEach((item)=>{
-                    expenses.push({...item.data(),id:item.id});
-                });
-                if(expenses.length <= 0){
-                    this.errorService.msg("no_expenses");
-                }else{
-                    this.errorService.clear();
-                }
-                // return empty or list with data
-                return expenses;
+    async getAllFromDbAsync(data){
+        if(!data.vehicle){
+            let temp;
+            await this.checkVehicleSelected().then((item)=>{ temp = item;})
+            data.vehicle = temp;
+        }
+
+        return this.expenseRef.ref.where('vehicleId', '==', data.vehicle).get().then((list)=>{
+            let expenses = [];
+            list.forEach((item)=>{
+                expenses.push({...item.data(),id:item.id});
             });
+            if(expenses.length <= 0){
+                this.errorService.msg("no_expenses");
+            }else{
+                this.errorService.clear();
+            }
+            // return empty or list with data
+            if(data.updateLocal){
+                this.expenses = expenses;
+            }
+            return expenses;
+        });
     }
 
     updateDB(expense, cb){
@@ -206,7 +211,7 @@ export class ExpenseService {
         let total = [];
         for (let i = 0; i < vehicles.length; i++) {
             const item = vehicles[i];
-            await this.getAllFromDbDontUpdateLocal(item.id).then((expenses)=>{
+            await this.getAllFromDbAsync({vehicle:item.id}).then((expenses)=>{
                 total[item.id] = 0;
                 expenses.forEach((expense)=>{
                     total[item.id] += +expense.sum;
