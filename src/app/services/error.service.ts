@@ -10,7 +10,7 @@ export class ErrorService {
     'expense_not_found': 'Expense Not Found',
     'expense_no_id': 'Expense ID not set',
     'vehicle_select': 'Please Select Vehicle',
-    'no_vehicles': 'There are no vehicles in the db',
+    'no_vehicles': 'You have no vehicles!',
     'vehicle_not_found': 'Vehicle Not Found',
     'vehicle_no_id': 'Vehicle ID not set',
     'please_login': 'Please login',

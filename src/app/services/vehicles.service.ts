@@ -1,8 +1,7 @@
-import { Injectable, EventEmitter, NgZone } from "@angular/core";
+import { Injectable, EventEmitter } from "@angular/core";
 import { AngularFirestore } from "angularfire2/firestore";
 
 import { ErrorService } from "./error.service";
-import { UserService } from "./user.service";
 
 @Injectable({
     providedIn: 'root'
@@ -17,8 +16,7 @@ export class VehiclesService {
         
     constructor(
      private db: AngularFirestore,
-     private errorService: ErrorService,
-     private zone:NgZone
+     private errorService: ErrorService
     ){
         this.vehiclesRef = this.db.collection('vehicles');
     }
