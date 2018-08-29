@@ -1,5 +1,5 @@
 interface Vehicle {
-    id: string;
     name: string;
+    id: string;
     uid: string;
 }

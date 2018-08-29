@@ -4,7 +4,6 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { auth } from 'firebase/app';
 
 import { UserService } from './user.service';
-import { VehiclesService } from './vehicles.service';
 @Injectable()
 export class AuthService {
 
@@ -12,7 +11,6 @@ export class AuthService {
     private afAuth: AngularFireAuth,
     private router: Router,
     private userService: UserService,
-    private vehicleService: VehiclesService,
   ){
 
     this.userService.getUser();

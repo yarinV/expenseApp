@@ -26,11 +26,9 @@ export class UpdateVehicleComponent implements OnInit {
   ngOnInit() {
     let id = this.route.snapshot.paramMap.get('id') || undefined;
     if(id !== undefined){
-      this.vehicleService.get({id});
-
-      this.vehicleService.vehicleDocFetched.subscribe((document)=>{
-        this.doc = document;
-      });      
+      this.vehicleService.get({id}).then((item)=>{
+        this.doc = item;
+      })
     }
   }
 
@@ -66,4 +64,5 @@ export class UpdateVehicleComponent implements OnInit {
       uid:""
     }
   }
+
 }

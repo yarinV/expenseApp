@@ -16,7 +16,6 @@ export class VehiclesService {
     vehicleSelectedChanged = new EventEmitter();
     vehi
     vehiclesChanged = new EventEmitter();
-    vehicleDocFetched = new EventEmitter<any>();
         
     constructor(
      private db: AngularFirestore,
@@ -25,25 +24,30 @@ export class VehiclesService {
     ){
         this.vehiclesRef = this.db.collection('vehicles');
     }
-    get(data){
+    async get(data){
         if(data.id !== undefined){
             // Check if data exist on the service
             if(this.vehicles.length === 0){
-                this.getOneFromDB(data.id);
+                return await this.getOneFromDB(data.id);
             }else{
                 // check if item exist on service
-                let document = this.vehicles.filter(item=>data.id === +item.id);
-                document.length > 0 ? this.vehicleDocFetched.emit(document) : this.getOneFromDB(data.id);
+                let document = this.vehicles.filter(item=>data.id === item.id);
+                if(document.length > 0){
+                    return document[0];
+                } else {
+                    return await this.getOneFromDB(data.id);
+                }
             }
         } else {
             if(this.vehicles.length === 0){
                 if(!data.uid){
                     this.errorService.msg('user_no_id');
-                    return false;
+                    return [];
                 }
                 this.getAllFromDB(data.uid);
             } else {
                 this.vehiclesChanged.emit(this.vehicles);
+                return this.vehicles;
             }
         }
     }
@@ -59,21 +63,16 @@ export class VehiclesService {
     }
 
     private getOneFromDB(id){
-        this.vehiclesRef.ref.doc(String(id)).onSnapshot((item)=>{
- 
+        return this.vehiclesRef.ref.doc(String(id)).get().then((item)=>{
             // if not found try to get item from DB 
             if(item.exists){
                 // if found resolve with the item
-                let document = {...item.data(), id: item.id};
-                 // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
-                this.zone.run(()=>{
-                    this.vehicleDocFetched.emit(document);
-                });
+                return {...item.data(), id: item.id};
             }else{
                 // if not found reject and post error msg
                 this.errorService.msg("vehicle_not_found");
+                return {};
             }
-
         });
     }
 
