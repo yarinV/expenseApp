@@ -14,8 +14,6 @@ export class VehiclesService {
     vehiclesRef;
     //handle vehicle select
     vehicleSelectedChanged = new EventEmitter();
-    vehi
-    vehiclesChanged = new EventEmitter();
         
     constructor(
      private db: AngularFirestore,
@@ -44,9 +42,10 @@ export class VehiclesService {
                     this.errorService.msg('user_no_id');
                     return [];
                 }
-                this.getAllFromDB(data.uid);
+                 let docs = await this.getAllFromDB(data.uid);
+                 console.log(docs);
+                 return docs;
             } else {
-                this.vehiclesChanged.emit(this.vehicles);
                 return this.vehicles;
             }
         }
@@ -78,37 +77,55 @@ export class VehiclesService {
 
     private getAllFromDB(uid){
   
-        let that = this;
-
-        this.vehiclesRef.ref.where('uid', '==', uid).onSnapshot((list)=>{
-            that.vehicles = [];
+        return this.vehiclesRef.ref.where('uid', '==', uid).get().then((list)=>{
+            this.vehicles = [];
             list.forEach((item)=>{
-                that.vehicles.push({...item.data(),id:item.id});
+                this.vehicles.push({...item.data(),id:item.id});
             });
-            if(that.vehicles.length <= 0){
+            if(this.vehicles.length <= 0){
                 this.errorService.msg("no_vehicles");
             }
-            // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
-            that.zone.run(()=>{
-                that.vehiclesChanged.emit(that.vehicles);
-            });
+            return this.vehicles;
         });
     }
 
     private updateDB(vehicle, cb){
         let timestamp = Math.floor(Date.now() / 1000);
         vehicle.date = timestamp;
-        this.vehiclesRef.doc(String(vehicle.id)).set(vehicle, {merge:true});
-        // TODO: after update run cb
-        if(typeof cb == "function"){
-            cb();
-        }
+        this.vehiclesRef.doc(String(vehicle.id)).set(vehicle, {merge:true}).then(()=>{
+            // update local 
+            let matched:boolean;
+            for(let i=0; i<this.vehicles.length; i++){
+                if(this.vehicles[i].id == vehicle.id){
+                    matched = true;
+                    this.vehicles.splice(i,1);
+                    this.vehicles.push(vehicle);
+                }
+            }
+
+            if(!matched){
+                this.vehicles.push(vehicle);
+            }
+            
+            if(typeof cb == "function"){
+                cb();
+            }
+        }).catch(()=>{
+
+        })
+
+
     }
 
     private deleteFromDB(id,cb){
         this.vehiclesRef.ref.doc(id).delete()
         .then(()=>{
             console.log("Document successfully deleted!");
+            for(let i=0; i<this.vehicles.length; i++){
+                if(this.vehicles[i].id == id){
+                    this.vehicles.splice(i,1);
+                }
+            }
             if(typeof cb == "function"){
                 cb();
             }

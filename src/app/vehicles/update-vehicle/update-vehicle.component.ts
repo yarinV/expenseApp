@@ -41,7 +41,7 @@ export class UpdateVehicleComponent implements OnInit {
       return false;
     }
     this.doc.uid = this.userService.userData.uid;
-    this.vehicleService.update( this.doc, ()=>{
+    this.vehicleService.update(this.doc, ()=>{
       // clear the data if not show individual expense
       if(this.route.snapshot.paramMap.get('id') !== undefined){
         this.clearData();

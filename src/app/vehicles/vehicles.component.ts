@@ -15,28 +15,16 @@ export class VehiclesComponent implements OnInit {
 
   ngOnInit() {
     var that = this;
-    // Subscribe for updates
-      that.vehiclesService.vehiclesChanged.subscribe(
-        (data)=>{
-          that.vehicles = data;
-        }
-      )
-    this.get();
-  }
-
-  get(){
-    this.vehiclesService.get({ uid : this.userService.userData.uid });
-  }
-
-  update(){
-
+    this.vehiclesService.get({ uid : this.userService.userData.uid }).then((data)=>{
+      that.vehicles = data;
+    });
   }
 
   handleSelect(event){
     let id = event.split(',')[0];
     let name = event.split(',')[1];
     this.vehicleName = name;
-    //TODO: add loadeing animation
+    //TODO: add loading animation
     // update user selectedVechile then get list of vehicles or show error if failed to update db
     this.userService.updateVehicleSelected(id, name).then(()=>{
       this.vehiclesService.vehicleSelectedChanged.emit();
