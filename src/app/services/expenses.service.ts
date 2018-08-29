@@ -79,13 +79,12 @@ export class ExpenseService {
     //     });
     // }
 
-    async getOneFromDBAsync(id){
-        return this.expenseRef.ref.doc(String(id)).onSnapshot((item)=>{
+    getOneFromDBAsync(id){
+        return this.expenseRef.ref.doc(String(id)).get().then((item)=>{
             // if not found try to get item from DB 
             if(item.exists){
                 // if found resolve with the item
-                let document = {...item.data(), id: item.id};
-                return this.expenseDocFetched.emit(document);
+                return {...item.data(), id: item.id};
             }else{
                 // if not found reject and post error msg
                 this.errorService.msg("expense_not_found");

@@ -19,9 +19,8 @@ export class ExpensesComponent implements OnInit {
   }
   
   ngOnInit() {
-    
     // get expenses but dont show errors
-    this.expenseService.get().then((data)=>{this.expenses = data;});
+    this.expenseService.get().then((data)=>{this.expenses = data});
   }
 
 

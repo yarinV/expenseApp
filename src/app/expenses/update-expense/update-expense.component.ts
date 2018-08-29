@@ -23,11 +23,9 @@ export class UpdateExpenseComponent implements OnInit {
   ngOnInit() {
     let id = this.route.snapshot.paramMap.get('id') || undefined;
     if(id !== undefined){
-      this.expenseService.get(id);
-
-      this.expenseService.expenseDocFetched.subscribe((document)=>{
-        this.doc = document;
-      });      
+      this.expenseService.get(id).then((document)=>{
+        this.doc = document
+      });
     }
   }
 
