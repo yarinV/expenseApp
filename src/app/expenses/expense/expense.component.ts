@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 
 import { ExpenseService } from '../../services/expenses.service';
 import { environment } from '../../../environments/environment';
+import { LoaderService } from '../../services/loader.service';
 
 @Component({
   selector: 'app-expense',
@@ -15,7 +16,12 @@ export class ExpenseComponent implements OnInit {
   speed_unit = environment.speed_unit;
   @Input('document') document;
 
-  constructor(private route:ActivatedRoute, private expenseService:ExpenseService, private location:Location) { }
+  constructor(
+    private route:ActivatedRoute,
+    private expenseService:ExpenseService,
+    private location:Location,
+    private LoaderService:LoaderService
+  ) { }
 
   ngOnInit() {
     // will show the expense by route or as a template doc
@@ -28,9 +34,11 @@ export class ExpenseComponent implements OnInit {
   }
 
   get(id){
+    this.LoaderService.startLoading();
     this.expenseService.get(id);
     this.expenseService.expenseDocFetched.subscribe((document)=>{
       this.doc = document;
+      this.LoaderService.finishLoading();
     });
   }
 

@@ -6,6 +6,7 @@
 </ng-template>
 
 <ng-template #guest>
-    <h3>Hello guest please Login first</h3>
-    <button (click)="authService.googleLogin()"><i class="fa fa-google"></i> Connect Google</button>
+    <h3>Hello</h3>
+    <p>Please Login with Gmail to use the app</p>
+    <button class="btn btn-primary login-btn" (click)="authService.googleLogin()"><i class="fa fa-google app-circle-button"></i><div>Login</div></button>
 </ng-template>

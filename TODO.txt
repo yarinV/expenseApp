@@ -9,3 +9,5 @@ hide expenses if no vehicles
 // BUG: Error msgs(no expenses) shown when there is expenses
 // Validate: cost and odo are numbers
 // action-api-service (value, actionType, emit)
+// loader animation
+// updating expense wont change the local this.expenses only the DB - maybe return to 2 way binding

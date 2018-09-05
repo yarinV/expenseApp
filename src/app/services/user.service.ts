@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
-import { ErrorService } from "./error.service";
+import { LogService } from "./log.service";
 import { Observable, of } from 'rxjs';
 import { switchMap} from 'rxjs/operators';
 import { AngularFireAuth } from "angularfire2/auth";
@@ -24,16 +24,16 @@ export class UserService {
   userData;
 
   constructor(  
-    private afAuth: AngularFireAuth,
+    private angularFireAuth: AngularFireAuth,
     private db: AngularFirestore,
-    private errorService: ErrorService,
+    private logService: LogService,
    ){
       this.userRef = this.db.collection('users');
   }
 
   getUser(){
     // Get auth data, then get firestore user document || null
-    this.user = this.afAuth.authState.pipe(
+    this.user = this.angularFireAuth.authState.pipe(
      switchMap(user => {
        if (user) {
          // Get user data
@@ -75,7 +75,7 @@ export class UserService {
     return new Promise((resolve, reject)=>{
       if(!this.userData){
         if(showError){
-          this.errorService.msg("please_login");
+          this.logService.msg("please_login");
         }
         reject();
       }
@@ -87,7 +87,7 @@ export class UserService {
             resolve(user.vehicleSelected);
           } else {
               if(showError){
-                this.errorService.msg("vehicleSelected_not_found");
+                this.logService.msg("vehicleSelected_not_found");
               }
               reject();
           }

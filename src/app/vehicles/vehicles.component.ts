@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import { VehiclesService } from '../services/vehicles.service';
 import { UserService } from '../services/user.service';
 import { ExpenseService } from '../services/expenses.service';
+import { LoaderService } from '../services/loader.service';
 
 @Component({
   selector: 'app-vehicles',
@@ -11,10 +12,11 @@ import { ExpenseService } from '../services/expenses.service';
   styleUrls: ['./vehicles.component.css'],
 })
 export class VehiclesComponent implements OnInit {
-  vehiclesService: VehiclesService
-  userService: UserService
-  expenseService: ExpenseService
-  router: Router
+  vehiclesService: VehiclesService;
+  userService: UserService;
+  expenseService: ExpenseService;
+  router: Router;
+  loaderService: LoaderService;
 
   vehicleName;
   showList;
@@ -26,9 +28,12 @@ export class VehiclesComponent implements OnInit {
     this.userService = injector.get(UserService);
     this.expenseService = injector.get(ExpenseService);
     this.router = injector.get(Router);
+    this.loaderService = injector.get(LoaderService);
   }
 
   ngOnInit() {
+    this.loaderService.startLoading();
+    
     this.vehiclesService.get({ uid : this.userService.userData.uid }).then((data)=>{
       if(data.length === 0){
         // TODO: redirect to intro page
@@ -39,7 +44,8 @@ export class VehiclesComponent implements OnInit {
       // after user vehicles returned calculate the expenses per vehicle
       this.expenseService.calculateTotal(this.vehicles).then((data)=>{
         this.total = data;
-      })
+        this.loaderService.finishLoading();
+      });
       
     });
   }
@@ -48,12 +54,10 @@ export class VehiclesComponent implements OnInit {
     let id = event.split(',')[0];
     let name = event.split(',')[1];
     this.vehicleName = name;
-    // TODO: add loading animation
     // Update user selectedVechile then get list of vehicles or show error if failed to update db
     this.userService.updateVehicleSelected(id, name).then(()=>{
       this.vehiclesService.vehicleSelectedChanged.emit();
     }).catch(()=>{
-      console.log('update user selected vehicle failed');
     })
 
   }

@@ -3,7 +3,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 
 import { Expense } from "../expenses/expense";
 import { VehiclesService } from "./vehicles.service";
-import { ErrorService } from "./error.service";
+import { LogService } from "./log.service";
 import { UserService } from "./user.service";
 
 @Injectable({
@@ -20,15 +20,15 @@ export class ExpenseService {
         private db: AngularFirestore,
         private vehiclesService:VehiclesService,
         private userService:UserService,
-        private errorService: ErrorService,
-        private zone:NgZone ){
+        private logService: LogService,
+        ){
             // Vehicle changed get the expenses
             this.vehiclesService.vehicleSelectedChanged.subscribe(
                 ()=>{
                     this.getAllFromDbAsync({updateLocal:true}, ()=>{
                         this.expensesChanged.emit()
                     });
-                    this.errorService.clear();
+                    this.logService.clear();
                 }
             )
             
@@ -65,22 +65,6 @@ export class ExpenseService {
         }
     }
 
-    // getOneFromDB(id){
-    //     return this.expenseRef.ref.doc(String(id)).onSnapshot((item)=>{
-    
-    //         // if not found try to get item from DB 
-    //         if(item.exists){
-    //             // if found resolve with the item
-    //             return {...item.data(), id: item.id};
-    //         }else{
-    //             // if not found reject and post error msg
-    //             this.errorService.msg("expense_not_found");
-    //             return {};
-    //         }
-
-    //     });
-    // }
-
     getOneFromDBAsync(id){
         return this.expenseRef.ref.doc(String(id)).get().then((item)=>{
             // if not found try to get item from DB 
@@ -89,43 +73,11 @@ export class ExpenseService {
                 return {...item.data(), id: item.id};
             }else{
                 // if not found reject and post error msg
-                this.errorService.msg("expense_not_found");
+                this.logService.msg("expense_not_found");
                 return {};
             }
         });
     }
-
-    // getAllFromDB(){
-
-    //     this.checkVehicleSelected().then((data)=>{
-    //         let vehicleSelected = data;
-        
-    //         if(vehicleSelected === ''){
-    //             return false;
-    //         }
-            
-    //         this.expenseRef.ref.where('vehicleId', '==', vehicleSelected).onSnapshot((list)=>{
-    //             this.expenses = new Array<any>();
-    //             list.forEach((item)=>{
-    //                 this.expenses.push({...item.data(),id:item.id});
-    //             });
-    //             if(this.expenses.length <= 0){
-    //                 this.errorService.msg("no_expenses");
-    //                 return false;
-    //             }else{
-    //                 this.errorService.clear();
-    //             }
-    //             // return empty or list with data
-    //             // zone.run make sure the emit event will run in angular zone and not inside the async DB call zone
-    //             this.zone.run(()=>{
-    //                 this.expensesChanged.emit(this.expenses);
-    //             });
-                
-    //         });
-
-    //     });
-       
-    // }
 
     async getAllFromDbAsync(data, cb?){
         if(!data.vehicle){
@@ -140,9 +92,9 @@ export class ExpenseService {
                 expenses.push({...item.data(),id:item.id});
             });
             if(expenses.length <= 0){
-                this.errorService.msg("no_expenses");
+                this.logService.msg("no_expenses");
             }else{
-                this.errorService.clear();
+                this.logService.clear();
             }
             // return empty or list with data
             if(data.updateLocal){
@@ -166,32 +118,39 @@ export class ExpenseService {
             }
 
             if(expense.id === undefined){
-                this.errorService.msg("expense_no_id");
+                this.logService.msg("expense_no_id");
                 return false;
             }else{
-                this.errorService.clear();
+                this.logService.clear();
             }
 
             expense.date = expense.date || timestamp;
             expense.vehicleId = vehicleSelected;
             
-            this.expenseRef.doc(String(expense.id)).set(expense);
-            // TODO: after update run cb
-            if(typeof cb == "function"){
-                cb();
-            }
+            this.expenseRef.doc(String(expense.id)).set(expense).then(()=>{
+                if(typeof cb == "function"){
+                    cb();
+                }
+                
+                this.logService.msg('expense_updated');
+            }).catch((error)=>{
+                this.logService.msg('expense_not_updated');
+                this.logService.msg(error);
+            });
+            
         });
     }
 
     deleteFromDB(id, cb){
         this.expenseRef.ref.doc(id).delete()
         .then(()=>{
-            console.log("Document successfully deleted!");
+            this.logService.msg('expense_deleted');
             if(typeof cb == "function"){
                 cb();
             }
         }).catch((error)=>{
-            console.error("Error removing document: ", error);
+            this.logService.msg('expense_not_deleted');
+            this.logService.msg(error);
         });
     }
 
@@ -204,7 +163,7 @@ export class ExpenseService {
             let newVehicleSelected = await this.userService.getVehicleSelected(false);
             if(newVehicleSelected === ''){
                 if(showError){
-                    this.errorService.msg("vehicle_select");
+                    this.logService.msg("vehicle_select");
                 } 
             }
             return newVehicleSelected;            

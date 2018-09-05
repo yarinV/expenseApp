@@ -15,7 +15,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { HeaderComponent } from './header/header.component';
 import { ExpenseComponent } from './expenses/expense/expense.component';
 import { environment } from '../environments/environment';
-import { ErrorsComponent } from './helpers/errors/errors.component';
+import { LogComponent } from './helpers/log/log.component';
 import { AuthGuard } from './helpers/auth.guard';
 import { UserService } from './services/user.service';
 import { AuthService } from './services/auth.service';
@@ -25,6 +25,7 @@ import { VehicleComponent } from './vehicles/vehicle/vehicle.component';
 import { UpdateVehicleComponent } from './vehicles/update-vehicle/update-vehicle.component';
 import { SubmitButtonComponent } from './components/submit-button/submit-button.component';
 import { AddButtonComponent } from './components/add-button/add-button.component';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -35,13 +36,14 @@ import { AddButtonComponent } from './components/add-button/add-button.component
     DashboardComponent,
     HeaderComponent,
     ExpenseComponent,
-    ErrorsComponent,
+    LogComponent,
     DeleteButtonComponent,
     VehiclesListComponent,
     VehicleComponent,
     UpdateVehicleComponent,
     SubmitButtonComponent,
     AddButtonComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,

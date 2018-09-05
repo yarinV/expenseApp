@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from "@angular/core";
 import { AngularFirestore } from "angularfire2/firestore";
 
-import { ErrorService } from "./error.service";
+import { LogService } from "./log.service";
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +16,7 @@ export class VehiclesService {
         
     constructor(
      private db: AngularFirestore,
-     private errorService: ErrorService
+     private logService: LogService
     ){
         this.vehiclesRef = this.db.collection('vehicles');
     }
@@ -37,7 +37,7 @@ export class VehiclesService {
         } else {
             if(this.vehicles.length === 0){
                 if(!data.uid){
-                    this.errorService.msg('user_no_id');
+                    this.logService.msg('user_no_id');
                     return [];
                 }
                  let docs = await this.getAllFromDB(data.uid);
@@ -66,7 +66,7 @@ export class VehiclesService {
                 return {...item.data(), id: item.id};
             }else{
                 // if not found reject and post error msg
-                this.errorService.msg("vehicle_not_found");
+                this.logService.msg("vehicle_not_found");
                 return {};
             }
         });
@@ -80,7 +80,7 @@ export class VehiclesService {
                 this.vehicles.push({...item.data(),id:item.id});
             });
             if(this.vehicles.length <= 0){
-                this.errorService.msg("no_vehicles");
+                this.logService.msg("no_vehicles");
             }
             return this.vehicles;
         });
