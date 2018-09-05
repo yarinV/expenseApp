@@ -35,7 +35,7 @@ export class ExpenseService {
             this.expenseRef = this.db.collection('expenses');
     }
 
-    async get(id?){
+    get(id?){
         if(id !== undefined){
             // get one document
             if(this.expenses === undefined){
@@ -131,7 +131,15 @@ export class ExpenseService {
                 if(typeof cb == "function"){
                     cb();
                 }
-                
+                // update the local
+                for (let i = 0; i < this.expenses.length; i++) {
+                    const element = this.expenses[i];
+                    if(element.id == expense.id){
+                        this.expenses[i] = {...expense};
+                        break;
+                    }        
+                }
+            
                 this.logService.msg('expense_updated');
             }).catch((error)=>{
                 this.logService.msg('expense_not_updated');
