@@ -49,7 +49,7 @@ export class ExpenseService {
             if(this.expenses === undefined){
                 return this.getAllFromDbAsync({updateLocal:true});
             } else {
-                return this.expenses.length > 0 ? this.expenses : this.getAllFromDbAsync({updateLocal:true});
+                return this.expenses.length > 0 ? Promise.resolve(this.expenses) : this.getAllFromDbAsync({updateLocal:true});
             }
         }
     }
