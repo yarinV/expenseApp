@@ -51,13 +51,17 @@ export class VehiclesComponent implements OnInit {
   }
 
   handleSelect(event){
-    let id = event.split(',')[0];
-    let name = event.split(',')[1];
+    let obj = {
+      id: event.split(',')[0],
+      name: event.split(',')[1],
+    }
+    
     this.vehicleName = name;
     // Update user selectedVechile then get list of vehicles or show error if failed to update db
-    this.userService.updateVehicleSelected(id, name).then(()=>{
+    this.userService.updateVehicleSelected(obj).then(()=>{
       this.vehiclesService.vehicleSelectedChanged.emit();
     }).catch(()=>{
+      
     })
 
   }

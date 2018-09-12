@@ -64,11 +64,12 @@ export class UserService {
     return userRef.set(this.setData(user), { merge: true })
   }
   
-  updateVehicleSelected(id, name){
-    this.userData.vehicle_name = name;
+  updateVehicleSelected(data){
     let user = this.db.doc(`users/${this.userData.uid}`);
-    return user.update({'vehicleSelected':id});
-
+    return user.update({'vehicleSelected': data.id}).then(()=>{
+      this.userData.vehicle_name = data.name;
+      this.userData.vehicleSelected = data.id;
+    })
   }
 
   getVehicleSelected(showError?){

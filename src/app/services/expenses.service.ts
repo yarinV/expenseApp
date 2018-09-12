@@ -25,7 +25,7 @@ export class ExpenseService {
             // Vehicle changed get the expenses
             this.vehiclesService.vehicleSelectedChanged.subscribe(
                 ()=>{
-                    this.getAllFromDbAsync({updateLocal:true}, ()=>{
+                    this.getAllFromDbAsync({updateLocal:true, showError: true}, ()=>{
                         this.expensesChanged.emit()
                     });
                     this.logService.clear();
@@ -91,11 +91,15 @@ export class ExpenseService {
             list.forEach((item)=>{
                 expenses.push({...item.data(),id:item.id});
             });
+
             if(expenses.length <= 0){
-                this.logService.msg("no_expenses");
+                if(data.showError){
+                    this.logService.msg("no_expenses");
+                }
             }else{
                 this.logService.clear();
             }
+
             // return empty or list with data
             if(data.updateLocal){
                 this.expenses = expenses;
@@ -182,7 +186,7 @@ export class ExpenseService {
         let total = [];
         for (let i = 0; i < vehicles.length; i++) {
             const item = vehicles[i];
-            await this.getAllFromDbAsync({vehicle:item.id}).then((expenses)=>{
+            await this.getAllFromDbAsync({vehicle:item.id, showError: false}).then((expenses)=>{
                 total[item.id] = 0;
                 expenses.forEach((expense)=>{
                     total[item.id] += +expense.sum;

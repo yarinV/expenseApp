@@ -1,7 +1,6 @@
 // TODO: redirect to intro page
 admin panel
 design ui
-add loading animation
 Setting page - currency, units (miles, kilometers)
 hide expenses if no vehicles
 
@@ -9,4 +8,3 @@ hide expenses if no vehicles
 // BUG: Error msgs(no expenses) shown when there is expenses
 // Validate: cost and odo are numbers
 // action-api-service (value, actionType, emit)
-// loader animation
