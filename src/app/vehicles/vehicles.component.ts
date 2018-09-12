@@ -40,6 +40,9 @@ export class VehiclesComponent implements OnInit {
         this.router.navigate(['vehicle-edit']);
         return;
       }
+      if(this.router.url.toLowerCase() === '/dashboard'){
+        return;
+      }
       this.vehicles = data;
       // after user vehicles returned calculate the expenses per vehicle
       this.expenseService.calculateTotal(this.vehicles).then((data)=>{

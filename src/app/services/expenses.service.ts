@@ -26,7 +26,7 @@ export class ExpenseService {
             this.vehiclesService.vehicleSelectedChanged.subscribe(
                 ()=>{
                     this.getAllFromDbAsync({updateLocal:true, showError: true}, ()=>{
-                        this.expensesChanged.emit()
+                        this.expensesChanged.emit();
                     });
                     this.logService.clear();
                 }
@@ -47,9 +47,9 @@ export class ExpenseService {
         } else {
             // get all documents
             if(this.expenses === undefined){
-                return this.getAllFromDbAsync({updateLocal:true});
+                return this.getAllFromDbAsync({updateLocal:true, showError: true});
             } else {
-                return this.expenses.length > 0 ? Promise.resolve(this.expenses) : this.getAllFromDbAsync({updateLocal:true});
+                return this.expenses.length > 0 ? Promise.resolve(this.expenses) : this.getAllFromDbAsync({updateLocal:true, showError: true});
             }
         }
     }
@@ -59,6 +59,7 @@ export class ExpenseService {
     }
 
     delete(id, cb){
+        
         if(id !== undefined){
             this.deleteFromDB(id, cb);
             return;
@@ -157,9 +158,13 @@ export class ExpenseService {
         this.expenseRef.ref.doc(id).delete()
         .then(()=>{
             this.logService.msg('expense_deleted');
-            if(typeof cb == "function"){
-                cb();
-            }
+            // After delete get all expenses from db and update local 
+            this.getAllFromDbAsync({updateLocal:true, showError: true}, ()=>{
+                this.expensesChanged.emit();
+                if(typeof cb == "function"){
+                    cb();
+                }
+            });
         }).catch((error)=>{
             this.logService.msg('expense_not_deleted');
             this.logService.msg(error);
