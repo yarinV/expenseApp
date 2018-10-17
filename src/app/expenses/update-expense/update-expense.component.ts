@@ -31,6 +31,8 @@ export class UpdateExpenseComponent implements OnInit {
         this.doc = document;
         this.LoaderService.finishLoading();
       });
+    }else{
+      this.LoaderService.finishLoading();
     }
   }
 

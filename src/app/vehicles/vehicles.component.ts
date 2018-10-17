@@ -72,6 +72,8 @@ export class VehiclesComponent implements OnInit {
   }
 
   match(vehicle){
+    // console.log(this.userService.userData.vehicleSelected);
+    
     return vehicle.id === this.userService.userData.vehicleSelected;
   }
 }

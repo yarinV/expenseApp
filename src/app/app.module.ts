@@ -54,7 +54,7 @@ import { LoaderComponent } from './components/loader/loader.component';
     AngularFireAuthModule,
     AngularFireDatabaseModule
   ],
-  providers: [UserService, AuthGuard, AuthService],
+  providers: [AuthGuard, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
