@@ -6,22 +6,19 @@ import { Subject } from 'rxjs';
 })
 export class LoaderService {
   isLoading:boolean;
-  loading = new Subject();
 
   constructor() { }
 
   startLoading(){
-    this.isLoading = true;
-    this.newEvent();
+    setTimeout(() => {
+      this.isLoading = true;
+    });
   }
 
   finishLoading(){
-    this.isLoading = false;
-    this.newEvent();
-  }
-
-  private newEvent(){
-    this.loading.next();
+    setTimeout(() => {
+      this.isLoading = false;
+    });
   }
 
 }
