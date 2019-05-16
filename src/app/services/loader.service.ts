@@ -1,23 +1,26 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoaderService {
-  isLoading:boolean;
+  isLoading: boolean;
+  changes = new EventEmitter();
 
   constructor() { }
 
-  startLoading(){
-    setTimeout(() => {
+  startLoading() {
+    setTimeout( () => {
       this.isLoading = true;
-    });
+      this.changes.emit(this.isLoading);
+    }, 0);
   }
 
-  finishLoading(){
-    setTimeout(() => {
+  finishLoading() {
+    setTimeout( () => {
       this.isLoading = false;
-    });
+      this.changes.emit(this.isLoading);
+    }, 0);
   }
 
 }

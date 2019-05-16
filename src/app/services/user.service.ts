@@ -23,7 +23,7 @@ export class UserService {
   user: Observable<User>;
   userData;
 
-  constructor(  
+  constructor(
     private angularFireAuth: AngularFireAuth,
     private db: AngularFirestore,
     private logService: LogService,
@@ -45,7 +45,7 @@ export class UserService {
      })
    );
   }
- 
+
   setData(user){
     const data: User = {
       uid: user.uid,
@@ -54,16 +54,16 @@ export class UserService {
       photoURL: user.photoURL,
     }
     this.userData = data;
-    
+
     return data;
   }
-   
+
   updateUserData(user) {
     // Sets user data to firestore on login
     const userRef: AngularFirestoreDocument<any> = this.db.doc(`users/${user.uid}`);
     return userRef.set(this.setData(user), { merge: true })
   }
-  
+
   updateVehicleSelected(data){
     let user = this.db.doc(`users/${this.userData.uid}`);
     return user.update({'vehicleSelected': data.id}).then(()=>{
@@ -81,8 +81,8 @@ export class UserService {
         reject();
       }
 
-      this.userRef.ref.doc(this.userData.uid).get().then((item)=>{
-          let user = item.data(); 
+      this.userRef.ref.doc(this.userData.uid).onSnapshot((item)=>{
+          let user = item.data();
           if(user.vehicleSelected !== undefined){
             this.userData.vehicleSelected = user.vehicleSelected;
             resolve(user.vehicleSelected);

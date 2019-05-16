@@ -17,34 +17,36 @@ export class UpdateExpenseComponent implements OnInit {
 
   constructor(
     private expenseService: ExpenseService,
-    private route:ActivatedRoute,
+    private route: ActivatedRoute,
     private location: Location,
-    private LoaderService:LoaderService) {
+    private LoaderService: LoaderService) {
     this.clearData();
   }
 
   ngOnInit() {
     this.LoaderService.startLoading();
-    let id = this.route.snapshot.paramMap.get('id') || undefined;
-    if(id !== undefined){
-      this.expenseService.get(id).then((document)=>{
+    const id = this.route.snapshot.paramMap.get('id') || undefined;
+    if (id !== undefined) {
+      this.expenseService.get(id);
+
+      this.expenseService.expenseDocFetched.subscribe((document: any) => {
         this.doc = document;
         this.LoaderService.finishLoading();
       });
-    }else{
+    } else {
       this.LoaderService.finishLoading();
     }
   }
 
-  submitForm(){
+  submitForm() {
     this.LoaderService.startLoading();
-    if(this.doc.id === ""){
+    if (this.doc.id === '') {
       this.doc.id = UUID.UUID();
     }
-    
-    this.expenseService.update( this.doc, ()=>{
+
+    this.expenseService.update( this.doc, () => {
       // clear the data if not show individual expense
-      if(this.route.snapshot.paramMap.get('id') !== undefined){
+      if (this.route.snapshot.paramMap.get('id') !== undefined) {
         this.clearData();
         this.location.back();
         this.LoaderService.finishLoading();
@@ -52,22 +54,22 @@ export class UpdateExpenseComponent implements OnInit {
     });
   }
 
-  delete(id){
+  delete(id) {
     this.LoaderService.startLoading();
     // Delete and go back
-    this.expenseService.delete(id,()=>{
+    this.expenseService.delete(id, () => {
       this.location.back();
       this.LoaderService.finishLoading();
     });
   }
-  
-  clearData(){
+
+  clearData() {
     this.doc = {
-      name:"",
-      sum:"",
-      odometer:"",
-      date:"",
-      id:""
-    }
+      name: '',
+      sum: '',
+      odometer: '',
+      date: '',
+      id: ''
+    };
   }
 }
