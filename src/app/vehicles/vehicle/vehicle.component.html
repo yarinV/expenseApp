@@ -2,6 +2,6 @@
     <img *ngIf="doc.img" src="doc.img" alt="doc.name">
     <ul class="doc">
         <li class="name">{{doc.name}}</li>
-        <li>Total: {{total | currency:'USD':true}}</li>
+        <li>Total: {{total | currency:'USD':'symbol'}}</li>
     </ul>
 </a>

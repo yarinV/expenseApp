@@ -1,7 +1,7 @@
 <a *ngIf="doc" class="link" routerLink="/expense-edit/{{doc.id}}">
   <ul class="doc">
     <li class="name">{{doc.name}}</li>
-    <li>Cost: {{doc.sum | currency:'USD':true}}</li>
+    <li>Cost: {{doc.sum | currency:'USD':'symbol'}}</li>
     <li>Odomter: {{doc.odometer | number}} {{speed_unit}}</li>
     <li>{{doc.date | date }}</li>
   </ul>

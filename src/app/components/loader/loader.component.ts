@@ -7,9 +7,16 @@ import { LoaderService } from '../../services/loader.service';
   styleUrls: ['./loader.component.scss']
 })
 export class LoaderComponent implements OnInit {
-  constructor(public loader:LoaderService) { }
+  value: boolean;
+  constructor(public loaderService: LoaderService) { }
 
   ngOnInit() {
+    this.loaderService.changes.subscribe( change => {
+      this.value = change;
+    });
   }
 
+  isLoading() {
+    return this.loaderService.isLoading;
+  }
 }

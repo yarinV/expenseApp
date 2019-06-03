@@ -1,5 +1,5 @@
 import { Component, OnInit, Injector } from '@angular/core';
-import {Router} from "@angular/router";
+import { Router } from '@angular/router';
 
 import { VehiclesService } from '../services/vehicles.service';
 import { UserService } from '../services/user.service';
@@ -23,7 +23,7 @@ export class VehiclesComponent implements OnInit {
   vehicles: Vehicle[] = [];
   total;
 
-  constructor(injector:Injector) {
+  constructor(injector: Injector) {
     this.vehiclesService = injector.get(VehiclesService);
     this.userService = injector.get(UserService);
     this.expenseService = injector.get(ExpenseService);
@@ -33,47 +33,49 @@ export class VehiclesComponent implements OnInit {
 
   ngOnInit() {
     this.loaderService.startLoading();
-    
-    this.vehiclesService.get({ uid : this.userService.userData.uid }).then((data)=>{
-      if(data.length === 0){
+
+    this.vehiclesService.get({ uid: this.userService.userData.uid }).then((res) => {
+      const data = res;
+      if (data.length === 0) {
         // TODO: redirect to intro page
         this.router.navigate(['vehicle-edit']);
         return;
       }
       this.vehicles = data;
 
-      if(this.router.url.toLowerCase() != 'dashboard'){
-        
+      if (this.router.url.toLowerCase() !== 'dashboard') {
+
         // after user vehicles returned calculate the expenses per vehicle
-        this.expenseService.calculateTotal(this.vehicles).then((data)=>{
-          this.total = data;
+        this.expenseService.calculateTotal(this.vehicles).then((res2) => {
+          this.total = res2;
           this.loaderService.finishLoading();
         });
 
       }
-      
+
     });
   }
 
-  handleSelect(event){
-    let obj = {
+  handleSelect(event) {
+
+    const obj = {
       id: event.split(',')[0],
       name: event.split(',')[1],
-    }
-    
-    this.vehicleName = name;
+    };
+
+    this.vehicleName = obj.name;
     // Update user selectedVechile then get list of vehicles or show error if failed to update db
-    this.userService.updateVehicleSelected(obj).then(()=>{
+    this.userService.updateVehicleSelected(obj).then(() => {
       this.vehiclesService.vehicleSelectedChanged.emit();
-    }).catch(()=>{
-      
-    })
+    }).catch((e) => {
+      console.log(e);
+    });
 
   }
 
-  match(vehicle){
+  match(vehicle) {
     // console.log(this.userService.userData.vehicleSelected);
-    
+
     return vehicle.id === this.userService.userData.vehicleSelected;
   }
 }
