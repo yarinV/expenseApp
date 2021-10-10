@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
+import { Vehicle } from '../vehicles/vehicles.interface';
 
 import { LogService } from './log.service';
 

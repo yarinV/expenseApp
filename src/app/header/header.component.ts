@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { VehiclesService } from '../services/vehicles.service';
 import { UserService } from '../services/user.service';
@@ -10,11 +10,19 @@ import { UserService } from '../services/user.service';
 })
 export class HeaderComponent implements OnInit {
   vehicleSelected;
+  public isCollapsed = false;
+  constructor(public auth: AuthService, public vehicleService: VehiclesService, public userService: UserService, private elementRef: ElementRef  ) {
 
-  constructor(public auth: AuthService, public vehicleService: VehiclesService, public userService: UserService ) {
-    
    }
 
-  ngOnInit() {}
+  ngOnInit() {
+    // let menuBtn = this.elementRef.nativeElement.querySelectorAll('.menu-btn')[0];
+    // menuBtn.addEventListener('click', ()=>{
+    //   menuBtn.collapse('toggle');
+    //   $('#myCollapsible').collapse({
+    //     toggle: false
+    //   })
+    // })
+  }
 
 }

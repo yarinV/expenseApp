@@ -102,7 +102,9 @@ export class ExpenseService {
       }
 
       this.expenseRef.ref.where('vehicleId', '==', vehicleSelected).onSnapshot((list) => {
-        this.expenses = new Array<any>();
+        if(list){
+          this.expenses = new Array<any>();
+        }
         list.forEach((item) => {
           this.expenses.push({ ...item.data(), id: item.id });
         });

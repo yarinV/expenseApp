@@ -10,8 +10,8 @@
     </div>
 
 
-    <delete-button *ngIf="doc.id" (click)="delete(doc.id)"></delete-button>
-    <submit-button text="vehicle" (click)="submitForm()"></submit-button>
+    <delete-button *ngIf="doc.id" text="Delete vehicle" (click)="delete(doc.id)"></delete-button>
+    <submit-button [text]="doc.id ? 'Update vehicle' : 'Add vehicle'" (click)="submitForm()"></submit-button>
 
   </div>
 </form>

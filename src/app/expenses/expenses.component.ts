@@ -26,6 +26,7 @@ export class ExpensesComponent implements OnInit {
     this.expenseService.expensesChanged.subscribe( res => {
         if(!res){
           this.expensesList = [];
+          this.loaderService.finishLoading();
           return;
         }
 

@@ -6,8 +6,8 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./delete-button.component.scss']
 })
 export class DeleteButtonComponent implements OnInit {
+  @Input() text;
   constructor() { }
-
 
   ngOnInit() {
   }

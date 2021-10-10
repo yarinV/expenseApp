@@ -5,6 +5,7 @@ import { VehiclesService } from '../services/vehicles.service';
 import { UserService } from '../services/user.service';
 import { ExpenseService } from '../services/expenses.service';
 import { LoaderService } from '../services/loader.service';
+import { Vehicle } from './vehicles.interface';
 
 @Component({
   selector: 'app-vehicles',

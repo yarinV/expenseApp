@@ -22,8 +22,8 @@
       </div>
     </div>
 
-    <delete-button *ngIf="doc.id" (click)="delete(doc.id)"></delete-button>
-    <submit-button text="expense" (click)="submitForm()"></submit-button>
+    <delete-button *ngIf="doc.id" text="Delete expense" (click)="delete(doc.id)"></delete-button>
+    <submit-button [text]="doc.id ? 'Update expense': 'Add expense'" (click)="submitForm()"></submit-button>
 
   </div>
 </form>
