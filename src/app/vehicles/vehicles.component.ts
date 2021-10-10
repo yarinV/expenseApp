@@ -39,18 +39,17 @@ export class VehiclesComponent implements OnInit {
       if (data.length === 0) {
         // TODO: redirect to intro page
         this.router.navigate(['vehicle-edit']);
+        this.loaderService.finishLoading();
         return;
       }
       this.vehicles = data;
 
       if (this.router.url.toLowerCase() !== 'dashboard') {
-
         // after user vehicles returned calculate the expenses per vehicle
         this.expenseService.calculateTotal(this.vehicles).then((res2) => {
           this.total = res2;
           this.loaderService.finishLoading();
         });
-
       }
 
     });
@@ -67,6 +66,7 @@ export class VehiclesComponent implements OnInit {
     // Update user selectedVechile then get list of vehicles or show error if failed to update db
     this.userService.updateVehicleSelected(obj).then(() => {
       this.vehiclesService.vehicleSelectedChanged.emit();
+      this.expenseService.expensesChanged.emit();
     }).catch((e) => {
       console.log(e);
     });

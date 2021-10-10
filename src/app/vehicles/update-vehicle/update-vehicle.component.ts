@@ -33,6 +33,8 @@ export class UpdateVehicleComponent implements OnInit {
         this.doc = item;
         this.loaderService.finishLoading();
       })
+    } else {
+      this.loaderService.finishLoading();
     }
   }
 
@@ -62,7 +64,7 @@ export class UpdateVehicleComponent implements OnInit {
       this.location.back();
     });
   }
-  
+
   clearData(){
     this.doc = {
       name:"",

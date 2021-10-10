@@ -1,5 +1,5 @@
 <form>
-  <h2 class="page-title">{{doc.id ? 'Update' : 'Add'}} Vehicle</h2>
+  <h2 class="page-title">{{doc.id ? 'Update' : 'Add'}} vehicle</h2>
   <div class="form-group">
 
     <div class="form-group row">
@@ -9,9 +9,9 @@
       </div>
     </div>
 
-    
+
     <delete-button *ngIf="doc.id" (click)="delete(doc.id)"></delete-button>
-    <submit-button (click)="submitForm()"></submit-button>
+    <submit-button text="vehicle" (click)="submitForm()"></submit-button>
 
   </div>
 </form>

@@ -25,6 +25,7 @@ export class ExpensesComponent implements OnInit {
     // Subscribe for updates
     this.expenseService.expensesChanged.subscribe( res => {
         if(!res){
+          this.expensesList = [];
           return;
         }
 

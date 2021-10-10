@@ -235,6 +235,9 @@ export class ExpenseService {
     for (let i = 0; i < vehicles.length; i++) {
       const item = vehicles[i];
       await this.getAllFromDbAsync({ vehicle: item.id, showError: false }).then((expenses) => {
+        if(expenses.length == 0){
+          return 0;
+        }
         total[item.id] = 0;
         expenses.forEach((expense) => {
           total[item.id] += +expense.sum;

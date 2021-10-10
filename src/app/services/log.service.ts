@@ -20,11 +20,12 @@ export class LogService {
     'please_login': 'Please login',
     'vehicleSelected_not_found': 'User Don\'t have default vehicle',
     'user_no_id': 'User id not found',
-    
+
   };
 
   msg(msg){
     this.newMsg.emit(this.MESSAGES[msg] || msg);
+    setTimeout(()=>{this.clear()},3000);
   }
 
   clear(){
